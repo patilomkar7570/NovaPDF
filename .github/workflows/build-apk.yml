@@ -31,6 +31,10 @@ jobs:
           yes | sdkmanager --licenses || true
           sdkmanager "platforms;android-35" "build-tools;35.0.0" || true
 
+      - name: Auto-fix typo in MainActivity.java
+        run: |
+          sed -i 's/setTextAllCaps/setAllCaps/g' app/src/main/java/app/stillpdf/reader/MainActivity.java
+
       - name: Build debug APK
         run: gradle --no-daemon assembleDebug
 
