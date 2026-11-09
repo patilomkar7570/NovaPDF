@@ -1,52 +1,75 @@
 # StillPDF — private, ad-free PDF reader
 
-StillPDF is a small Android PDF reader designed for personal use. It has no ads, analytics, account system, internet permission, or tracking SDK.
+StillPDF is a lightweight Android PDF reader designed around privacy and offline use. It has no advertisements, analytics, account system, internet permission, or tracking SDK.
 
 ## Features
 
 - Open PDF files using Android's system document picker.
 - Render PDF pages offline using Android `PdfRenderer`.
-- Search for words/phrases in selectable PDF text using PDFBox-Android.
+- Search for words and phrases in selectable PDF text using PDFBox-Android.
 - Save and remove page bookmarks.
-- Remember the last page for each recent document.
-- Recent documents and bookmarks saved on-device.
-- Light and dark app themes.
-- Accept PDF files opened/shared from other apps.
+- Remember the last page for each document.
+- View recently opened documents and saved bookmarks.
+- Switch between light and dark themes.
+- Open or share PDF files from other apps.
 
-### Known limitations
+## Privacy
 
-- Search only works on text embedded in the PDF. Scanned/image-only PDFs require OCR; OCR is not included.
-- This is a first version, not yet device-tested in this environment.
+- No ads, accounts, analytics, or tracking.
+- No Internet permission is requested.
+- Documents are processed locally on your device.
+- App preferences and cached document copies are stored in private app storage.
+- Uninstalling the app removes its private local data and cache.
+
+## Known limitations
+
+- Search works only with text embedded in the PDF. Scanned or image-only PDFs require OCR; OCR is not included.
 - Password-protected, damaged, or unusual PDFs may fail to open.
-- The first time you build the app, Gradle downloads the Android build plugin and PDFBox dependency.
+
+## Download
+
+The latest public release is **StillPDF v1.0.0**.
+
+- [Download StillPDF v1.0.0 APK](https://github.com/patilomkar7570/StillPDF/releases/download/v1.0.0/Still.PDF.apk)
+- [View all releases](https://github.com/patilomkar7570/StillPDF/releases)
+
+Download the APK to your Android device and install it. Android may ask you to allow installation from the browser or file manager you used. Only install APKs from sources you trust.
+
+**Minimum Android version:** Android 6.0 (API 23).
 
 ## Build an APK in Android Studio
 
-1. Install Android Studio on a computer and let it install a compatible Android SDK.
-2. Extract the `StillPDF` folder from this ZIP.
-3. In Android Studio, choose **Open** and select the extracted `StillPDF` folder.
-4. Allow Gradle sync to finish. If prompted, install Android SDK Platform 35 and Java 17.
-5. Choose **Build → Build Bundle(s) / APK(s) → Build APK(s)**.
-6. Android Studio will show a link to the debug APK. The expected output path is:
+1. Install Android Studio and a compatible Android SDK.
+2. Open the `StillPDF` project folder in Android Studio.
+3. Allow Gradle sync to finish. If prompted, install Android SDK Platform 35 and Java 17.
+4. Choose **Build → Build Bundle(s) / APK(s) → Build APK(s)**.
+5. Android Studio will provide the debug APK. The expected output path is:
 
    `app/build/outputs/apk/debug/app-debug.apk`
 
-7. Transfer that APK to your Android phone, tap it, and allow installation for the file app you used to open it. Only install APKs you built or otherwise trust.
-
-The debug APK is intended for personal use. It is not a Play Store release build.
+The debug APK is intended for development and testing. It is not the signed public release APK.
 
 ## Build using GitHub Actions
 
-The included `.github/workflows/build-apk.yml` builds a debug APK on a push to the `main` or `master` branch, or when manually started from the repository's **Actions** tab. After a successful run, open the workflow run and download the `StillPDF-debug-apk` artifact. GitHub keeps the artifact for 14 days.
+The workflow at `.github/workflows/build-apk.yml` builds a **signed release APK** when code is pushed to the `main` or `master` branch, or when the workflow is started manually from the repository's **Actions** tab.
+
+After a successful run:
+
+1. Open the completed **Build StillPDF APK** workflow run.
+2. Find the `StillPDF-signed-release-apk` artifact.
+3. Download the artifact ZIP and extract `app-release.apk`.
+
+The workflow uses GitHub Actions repository secrets for the Android release-signing keystore and passwords. These signing credentials must be configured by the repository maintainer. Workflow artifacts are retained for 30 days.
 
 ## Technical details
 
 - Package: `app.stillpdf.reader`
-- Version: `1.0.0`
+- Current version: `1.0.0`
 - Minimum Android version: Android 6.0 (API 23)
 - Compile SDK: 35
 - Target SDK: 34
+- Java: 17
 - PDF rendering: Android `PdfRenderer`
-- Text extraction/search: PDFBox-Android `2.0.27.0`
+- Text extraction and search: PDFBox-Android `2.0.27.0`
 
-All app-owned preferences and cached document copies are stored in private app storage. The app does not request Internet access. Removing the app also removes its private local data/cache.
+StillPDF is an offline-first project. It does not request Internet access.
