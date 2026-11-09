@@ -2,6 +2,8 @@
 
 StillPDF is a lightweight Android PDF reader designed around privacy and offline use. It has no advertisements, analytics, account system, internet permission, or tracking SDK.
 
+**By NOVA** · An independent app in the NOVA ecosystem.
+
 ## Features
 
 - Open PDF files using Android's system document picker.
