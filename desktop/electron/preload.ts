@@ -7,6 +7,7 @@ export interface ElectronAPI {
   savePreferences: (prefs: any) => Promise<boolean>;
   print: () => Promise<void>;
   onMenuAction: (callback: (action: string) => void) => () => void;
+  onOpenFile: (callback: (filePath: string) => void) => () => void;
   getAppVersion: () => Promise<string>;
 }
 
@@ -21,6 +22,13 @@ const api: ElectronAPI = {
     ipcRenderer.on('menu:action', handler);
     return () => {
       ipcRenderer.removeListener('menu:action', handler);
+    };
+  },
+  onOpenFile: (callback: (filePath: string) => void) => {
+    const handler = (_event: any, filePath: string) => callback(filePath);
+    ipcRenderer.on('app:openFile', handler);
+    return () => {
+      ipcRenderer.removeListener('app:openFile', handler);
     };
   },
   getAppVersion: () => ipcRenderer.invoke('app:version'),

@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 
 let mainWindow: BrowserWindow | null = null;
+let fileToOpenOnStartup: string | null = null;
 
 function getIconPath(): string {
   const icoPath = path.join(__dirname, '../resources/icon.ico');
@@ -15,6 +16,36 @@ function getIconPath(): string {
 function getPrefsPath(): string {
   const userDataDir = app.getPath('userData');
   return path.join(userDataDir, 'nova-pdf-settings.json');
+}
+
+function findPdfInArgv(argv: string[]): string | null {
+  for (let i = 1; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg && typeof arg === 'string' && !arg.startsWith('--') && !arg.startsWith('-')) {
+      if (arg.toLowerCase().endsWith('.pdf') && fs.existsSync(arg)) {
+        return path.resolve(arg);
+      }
+    }
+  }
+  return null;
+}
+
+// Single-instance lock
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on('second-instance', (_event, commandLine) => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+
+      const secondFile = findPdfInArgv(commandLine);
+      if (secondFile) {
+        mainWindow.webContents.send('app:openFile', secondFile);
+      }
+    }
+  });
 }
 
 function createWindow(): void {
@@ -56,6 +87,9 @@ function createWindow(): void {
   mainWindow.once('ready-to-show', () => {
     if (mainWindow) {
       mainWindow.show();
+      if (fileToOpenOnStartup) {
+        mainWindow.webContents.send('app:openFile', fileToOpenOnStartup);
+      }
     }
   });
 
@@ -272,6 +306,9 @@ ipcMain.handle('window:print', async () => {
 ipcMain.handle('app:version', async () => {
   return app.getVersion();
 });
+
+// App lifecycle
+fileToOpenOnStartup = findPdfInArgv(process.argv);
 
 app.whenReady().then(createWindow);
 

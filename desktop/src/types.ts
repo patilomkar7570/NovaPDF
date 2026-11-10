@@ -44,6 +44,7 @@ declare global {
       savePreferences: (prefs: AppPreferences) => Promise<boolean>;
       print: () => Promise<void>;
       onMenuAction: (callback: (action: string) => void) => () => void;
+      onOpenFile: (callback: (filePath: string) => void) => () => void;
       getAppVersion: () => Promise<string>;
     };
   }

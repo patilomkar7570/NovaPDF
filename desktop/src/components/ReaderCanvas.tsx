@@ -9,6 +9,8 @@ interface ReaderCanvasProps {
   zoomScale: number;
   onCalculatedScaleChange: (scale: number) => void;
   onDropFiles: (files: FileList) => void;
+  onZoomIn?: () => void;
+  onZoomOut?: () => void;
 }
 
 export const ReaderCanvas: React.FC<ReaderCanvasProps> = ({
@@ -18,11 +20,51 @@ export const ReaderCanvas: React.FC<ReaderCanvasProps> = ({
   zoomScale,
   onCalculatedScaleChange,
   onDropFiles,
+  onZoomIn,
+  onZoomOut,
 }) => {
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [dragOver, setDragOver] = React.useState(false);
+  const [containerDimensions, setContainerDimensions] = React.useState({ width: 800, height: 600 });
+
+  // Observe container resizing for responsive Fit Width / Fit Page
+  React.useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.contentRect) {
+          setContainerDimensions({
+            width: entry.contentRect.width,
+            height: entry.contentRect.height,
+          });
+        }
+      }
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Handle Ctrl + Mouse Wheel Zoom
+  React.useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      if (e.ctrlKey) {
+        e.preventDefault();
+        if (e.deltaY < 0 && onZoomIn) {
+          onZoomIn();
+        } else if (e.deltaY > 0 && onZoomOut) {
+          onZoomOut();
+        }
+      }
+    };
+
+    container.addEventListener('wheel', handleWheel, { passive: false });
+    return () => container.removeEventListener('wheel', handleWheel);
+  }, [onZoomIn, onZoomOut]);
 
   // Render current page
   React.useEffect(() => {
@@ -36,14 +78,13 @@ export const ReaderCanvas: React.FC<ReaderCanvasProps> = ({
     activeDoc.getPage(currentPage).then((page: PDFPageProxy) => {
       if (cancelled || !canvasRef.current || !containerRef.current) return;
 
-      const container = containerRef.current;
       const canvas = canvasRef.current;
       const context = canvas.getContext('2d');
       if (!context) return;
 
       const unscaledViewport = page.getViewport({ scale: 1 });
-      const containerWidth = container.clientWidth - 48; // padding margin
-      const containerHeight = container.clientHeight - 48;
+      const containerWidth = Math.max(200, containerDimensions.width - 48);
+      const containerHeight = Math.max(200, containerDimensions.height - 48);
 
       let effectiveScale = 1.0;
       if (zoomMode === 'fit-width') {
@@ -58,7 +99,7 @@ export const ReaderCanvas: React.FC<ReaderCanvasProps> = ({
 
       onCalculatedScaleChange(effectiveScale);
 
-      // Hi-DPI scaling for ultra-sharp text
+      // Hi-DPI scaling for crisp text
       const dpr = window.devicePixelRatio || 1;
       const viewport = page.getViewport({ scale: effectiveScale });
 
@@ -92,7 +133,7 @@ export const ReaderCanvas: React.FC<ReaderCanvasProps> = ({
         renderTask.cancel();
       }
     };
-  }, [activeDoc, currentPage, zoomMode, zoomScale]);
+  }, [activeDoc, currentPage, zoomMode, zoomScale, containerDimensions]);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();

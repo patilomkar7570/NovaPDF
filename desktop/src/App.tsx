@@ -62,10 +62,10 @@ export const App: React.FC = () => {
     });
   };
 
-  // Listen to menu actions from Electron
+  // Listen to menu actions and file open from Electron
   React.useEffect(() => {
     if (!window.electronAPI) return;
-    const cleanup = window.electronAPI.onMenuAction((action) => {
+    const cleanupMenu = window.electronAPI.onMenuAction((action) => {
       switch (action) {
         case 'open':
           handleOpenPdf();
@@ -102,7 +102,17 @@ export const App: React.FC = () => {
           break;
       }
     });
-    return cleanup;
+
+    const cleanupFile = window.electronAPI.onOpenFile((filePath) => {
+      if (filePath) {
+        handleOpenRecent(filePath, 1);
+      }
+    });
+
+    return () => {
+      cleanupMenu();
+      cleanupFile();
+    };
   }, [activeDoc, currentPage, numPages]);
 
   // Keyboard shortcuts
@@ -410,6 +420,8 @@ export const App: React.FC = () => {
                 zoomScale={zoomScale}
                 onCalculatedScaleChange={setCalculatedScale}
                 onDropFiles={handleDropFiles}
+                onZoomIn={handleZoomIn}
+                onZoomOut={handleZoomOut}
               />
             </>
           ) : (

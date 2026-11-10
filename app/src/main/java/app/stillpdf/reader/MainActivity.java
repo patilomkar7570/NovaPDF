@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -27,7 +26,6 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -82,11 +80,15 @@ public class MainActivity extends Activity {
 
     private float zoomScale = 1.0f;
     private boolean showThumbnailsPanel = true;
+    private int thumbRequestId = 0;
 
     private ViewGroup root;
     private ImageView pageImage;
     private TextView pageCounter;
     private TextView bookmarkButton;
+    private TextView zoomIndicator;
+    private Button prevButton;
+    private Button nextButton;
     private EditText searchInput;
     private Button nextSearchButton;
     private LinearLayout thumbnailContainer;
@@ -361,7 +363,7 @@ public class MainActivity extends Activity {
         cardParams.topMargin = dp(12);
         homeRoot.addView(actionCard, cardParams);
 
-        // Document sections: On compact, vertical stack; On medium/expanded tablets, side-by-side two columns!
+        // Document sections: On compact, vertical stack; On medium/expanded tablets, side-by-side two columns
         ScrollView scroll = new ScrollView(this);
         scroll.setFillViewport(true);
 
@@ -631,7 +633,6 @@ public class MainActivity extends Activity {
     private void buildReader() {
         reading = true;
         boolean compact = isCompact();
-        boolean expanded = isExpanded();
 
         LinearLayout readerRoot = vertical();
         readerRoot.setBackgroundColor(colorBackground());
@@ -671,10 +672,10 @@ public class MainActivity extends Activity {
         zoomOut.setOnClickListener(v -> changeZoom(-0.25f));
         topBar.addView(zoomOut, lp(36, 52));
 
-        TextView zoomReset = text(Math.round(zoomScale * 100) + "%", 12, true, colorMuted());
-        zoomReset.setGravity(Gravity.CENTER);
-        zoomReset.setOnClickListener(v -> resetZoom());
-        topBar.addView(zoomReset, lp(compact ? 42 : 50, 52));
+        zoomIndicator = text(Math.round(zoomScale * 100) + "%", 12, true, colorMuted());
+        zoomIndicator.setGravity(Gravity.CENTER);
+        zoomIndicator.setOnClickListener(v -> resetZoom());
+        topBar.addView(zoomIndicator, lp(compact ? 42 : 50, 52));
 
         TextView zoomIn = text("＋", 18, true, colorText());
         zoomIn.setGravity(Gravity.CENTER);
@@ -723,7 +724,6 @@ public class MainActivity extends Activity {
         readerRoot.addView(searchRow, lp(-1, 50));
 
         // Main Reading Area:
-        // For tablets (medium/expanded): horizontal split if thumbnails active
         LinearLayout centerSplit = horizontal();
         centerSplit.setBackgroundColor(darkMode ? Color.parseColor("#181B20") : Color.parseColor("#E5E9F0"));
 
@@ -739,7 +739,6 @@ public class MainActivity extends Activity {
 
             centerSplit.addView(thumbnailScroll, lp(compact ? 120 : 170, -1));
 
-            // Populate thumbnails
             populateThumbnails();
         }
 
@@ -768,16 +767,16 @@ public class MainActivity extends Activity {
         nav.setPadding(dp(16), dp(6), dp(16), dp(6));
         nav.setBackgroundColor(colorSurface());
 
-        Button previous = makeButton("←  Prev", false, () -> setPage(currentPage - 1));
-        nav.addView(previous, new LinearLayout.LayoutParams(0, dp(42), 1));
+        prevButton = makeButton("←  Prev", false, () -> setPage(currentPage - 1));
+        nav.addView(prevButton, new LinearLayout.LayoutParams(0, dp(42), 1));
 
         pageCounter = text(pageLabel(), 14, true, colorText());
         pageCounter.setGravity(Gravity.CENTER);
         pageCounter.setOnClickListener(v -> showPageJumpDialog());
         nav.addView(pageCounter, new LinearLayout.LayoutParams(0, dp(42), 1));
 
-        Button next = makeButton("Next  →", true, () -> setPage(currentPage + 1));
-        nav.addView(next, new LinearLayout.LayoutParams(0, dp(42), 1));
+        nextButton = makeButton("Next  →", true, () -> setPage(currentPage + 1));
+        nav.addView(nextButton, new LinearLayout.LayoutParams(0, dp(42), 1));
 
         readerRoot.addView(nav, lp(-1, 54));
 
@@ -828,14 +827,22 @@ public class MainActivity extends Activity {
         builder.show();
     }
 
+    /**
+     * Renders page thumbnails sequentially on an independent background thread
+     * using its own dedicated PdfRenderer and ParcelFileDescriptor instances,
+     * avoiding any IllegalStateException from concurrent page rendering.
+     */
     private void populateThumbnails() {
-        if (thumbnailContainer == null || renderer == null || pageCount <= 0) return;
+        if (thumbnailContainer == null || currentFile == null || pageCount <= 0) return;
         thumbnailContainer.removeAllViews();
+        final int reqId = ++thumbRequestId;
 
-        int thumbWidthDp = isCompact() ? 100 : 150;
-        int maxThumbsToLoad = Math.min(pageCount, 100);
+        int thumbWidthDp = isCompact() ? 100 : 140;
+        int maxThumbs = Math.min(pageCount, 60);
 
-        for (int i = 0; i < maxThumbsToLoad; i++) {
+        final ImageView[] thumbViews = new ImageView[maxThumbs];
+
+        for (int i = 0; i < maxThumbs; i++) {
             final int pageIdx = i;
             LinearLayout thumbItem = vertical();
             thumbItem.setPadding(dp(4), dp(4), dp(4), dp(4));
@@ -860,24 +867,44 @@ public class MainActivity extends Activity {
             itemLp.bottomMargin = dp(8);
             thumbnailContainer.addView(thumbItem, itemLp);
 
-            // Asynchronously load thumbnail image
-            ioExecutor.execute(() -> {
-                if (renderer == null || isFinishing() || isDestroyed()) return;
-                try (PdfRenderer.Page page = renderer.openPage(pageIdx)) {
-                    int w = dp(thumbWidthDp);
-                    float ratio = (float) page.getHeight() / Math.max(1, page.getWidth());
-                    int h = Math.max(1, Math.round(w * ratio));
-                    Bitmap thumbBm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-                    thumbBm.eraseColor(Color.WHITE);
-                    page.render(thumbBm, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-                    runOnUiThread(() -> {
-                        if (thumbnailContainer != null && thumbImg != null) {
-                            thumbImg.setImageBitmap(thumbBm);
-                        }
-                    });
-                } catch (Exception ignored) { }
-            });
+            thumbViews[i] = thumbImg;
         }
+
+        final File pdfFile = currentFile;
+        ioExecutor.execute(() -> {
+            ParcelFileDescriptor pfd = null;
+            PdfRenderer r = null;
+            try {
+                pfd = ParcelFileDescriptor.open(pdfFile, ParcelFileDescriptor.MODE_READ_ONLY);
+                r = new PdfRenderer(pfd);
+                for (int i = 0; i < maxThumbs; i++) {
+                    if (reqId != thumbRequestId || isFinishing() || isDestroyed()) break;
+                    Bitmap bm = null;
+                    try (PdfRenderer.Page page = r.openPage(i)) {
+                        int w = dp(thumbWidthDp);
+                        float ratio = (float) page.getHeight() / Math.max(1, page.getWidth());
+                        int h = Math.max(1, Math.round(w * ratio));
+                        bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+                        bm.eraseColor(Color.WHITE);
+                        page.render(bm, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+                    } catch (Exception ignored) { }
+
+                    final int pageIdx = i;
+                    final Bitmap finalBm = bm;
+                    if (finalBm != null) {
+                        runOnUiThread(() -> {
+                            if (reqId == thumbRequestId && thumbViews[pageIdx] != null) {
+                                thumbViews[pageIdx].setImageBitmap(finalBm);
+                            }
+                        });
+                    }
+                }
+            } catch (Exception ignored) {
+            } finally {
+                if (r != null) { try { r.close(); } catch (Exception ignored) {} }
+                if (pfd != null) { try { pfd.close(); } catch (Exception ignored) {} }
+            }
+        });
     }
 
     private String pageLabel() {
@@ -887,7 +914,40 @@ public class MainActivity extends Activity {
     private void updateReaderControls() {
         if (pageCounter != null) pageCounter.setText(pageLabel());
         if (bookmarkButton != null) bookmarkButton.setText(isBookmarked(currentUri, currentPage) ? "★" : "☆");
-        if (nextSearchButton != null) nextSearchButton.setEnabled(!searchPages.isEmpty());
+        if (zoomIndicator != null) zoomIndicator.setText(Math.round(zoomScale * 100) + "%");
+        if (nextSearchButton != null) {
+            boolean hasMatches = !searchPages.isEmpty();
+            nextSearchButton.setEnabled(hasMatches);
+            nextSearchButton.setAlpha(hasMatches ? 1.0f : 0.4f);
+        }
+        if (prevButton != null) {
+            boolean canPrev = currentPage > 0;
+            prevButton.setEnabled(canPrev);
+            prevButton.setAlpha(canPrev ? 1.0f : 0.4f);
+        }
+        if (nextButton != null) {
+            boolean canNext = currentPage < pageCount - 1;
+            nextButton.setEnabled(canNext);
+            nextButton.setAlpha(canNext ? 1.0f : 0.4f);
+        }
+    }
+
+    private void updateThumbnailHighlight() {
+        if (thumbnailContainer == null) return;
+        int childCount = thumbnailContainer.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View child = thumbnailContainer.getChildAt(i);
+            if (child instanceof LinearLayout) {
+                LinearLayout item = (LinearLayout) child;
+                boolean selected = (i == currentPage);
+                item.setBackground(backgroundShape(colorSurface(), 8, selected ? colorAccent() : colorBorder()));
+                if (item.getChildCount() > 0 && item.getChildAt(0) instanceof TextView) {
+                    TextView lbl = (TextView) item.getChildAt(0);
+                    lbl.setTextColor(selected ? colorAccent() : colorMuted());
+                    lbl.setTypeface(Typeface.DEFAULT, selected ? Typeface.BOLD : Typeface.NORMAL);
+                }
+            }
+        }
     }
 
     private void renderPage(int pageIndex) {
@@ -917,6 +977,7 @@ public class MainActivity extends Activity {
         }
         prefs.edit().putInt(pageKey(currentUri), currentPage).apply();
         updateReaderControls();
+        updateThumbnailHighlight();
     }
 
     private void setPage(int newPage) {
@@ -1060,6 +1121,7 @@ public class MainActivity extends Activity {
     }
 
     private void closeRenderer() {
+        thumbRequestId++;
         if (displayedBitmap != null && !displayedBitmap.isRecycled()) displayedBitmap.recycle();
         displayedBitmap = null;
         if (renderer != null) {
@@ -1073,6 +1135,9 @@ public class MainActivity extends Activity {
         pageImage = null;
         pageCounter = null;
         bookmarkButton = null;
+        zoomIndicator = null;
+        prevButton = null;
+        nextButton = null;
         searchInput = null;
         nextSearchButton = null;
         thumbnailContainer = null;
@@ -1085,6 +1150,19 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // When typing in search input, let all text events pass to the input field
+        if (searchInput != null && searchInput.hasFocus()) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                searchPdf();
+                return true;
+            }
+            if (keyCode == KeyEvent.KEYCODE_ESCAPE) {
+                hideKeyboard();
+                return true;
+            }
+            return super.onKeyDown(keyCode, event);
+        }
+
         if (reading) {
             if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_PAGE_UP) {
                 setPage(currentPage - 1);
