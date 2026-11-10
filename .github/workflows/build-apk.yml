@@ -67,12 +67,12 @@ jobs:
           echo "=== Printing certificate details with keytool ==="
           keytool -printcert -jarfile "$RELEASE_APK"
           
-          cp "$RELEASE_APK" "app/build/outputs/apk/release/NOVA-PDF-Android-v1.1.0.apk"
+          cp "$RELEASE_APK" "app/build/outputs/apk/release/NOVA-PDF-Android-v1.0.apk"
 
       - name: Upload signed release APK
         uses: actions/upload-artifact@v4
         with:
-          name: NOVA-PDF-Android-v1.1.0.apk
-          path: app/build/outputs/apk/release/NOVA-PDF-Android-v1.1.0.apk
+          name: NOVA-PDF-Android-v1.0.apk
+          path: app/build/outputs/apk/release/NOVA-PDF-Android-v1.0.apk
           if-no-files-found: error
           retention-days: 30

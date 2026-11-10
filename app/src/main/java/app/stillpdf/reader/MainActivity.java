@@ -235,8 +235,8 @@ public class MainActivity extends Activity {
         button.setAllCaps(false);
         button.setTextSize(14);
         button.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
-        button.setPadding(dp(14), dp(8), dp(14), dp(8));
-        button.setMinHeight(dp(44));
+        button.setPadding(dp(16), dp(10), dp(16), dp(10));
+        button.setMinHeight(dp(46));
         button.setBackground(backgroundShape(primary ? colorAccent() : colorSurface(), 12,
                 primary ? 0 : colorBorder()));
         button.setTextColor(primary ? Color.WHITE : colorText());
@@ -312,7 +312,7 @@ public class MainActivity extends Activity {
 
         // Action Card (Open PDF & Continue Reading)
         LinearLayout actionCard = vertical();
-        actionCard.setPadding(dp(16), dp(16), dp(16), dp(16));
+        actionCard.setPadding(dp(18), dp(16), dp(18), dp(24));
         actionCard.setBackground(backgroundShape(colorSurface(), 16, colorBorder()));
 
         TextView actionTitle = text("Open a document", compact ? 17 : 20, true, colorText());
@@ -325,12 +325,14 @@ public class MainActivity extends Activity {
         LinearLayout buttonRow = compact ? vertical() : horizontal();
         Button open = makeButton("＋  Open PDF", true, this::launchPicker);
         if (compact) {
-            LinearLayout.LayoutParams openParams = lp(-1, 48);
+            LinearLayout.LayoutParams openParams = lp(-1, 50);
             openParams.topMargin = dp(14);
+            openParams.bottomMargin = dp(4);
             buttonRow.addView(open, openParams);
         } else {
-            LinearLayout.LayoutParams openParams = lp(180, 48);
+            LinearLayout.LayoutParams openParams = lp(180, 50);
             openParams.topMargin = dp(14);
+            openParams.bottomMargin = dp(4);
             buttonRow.addView(open, openParams);
         }
 
@@ -347,13 +349,15 @@ public class MainActivity extends Activity {
                 }
             });
             if (compact) {
-                LinearLayout.LayoutParams resumeParams = lp(-1, 48);
-                resumeParams.topMargin = dp(8);
+                LinearLayout.LayoutParams resumeParams = lp(-1, 50);
+                resumeParams.topMargin = dp(10);
+                resumeParams.bottomMargin = dp(4);
                 buttonRow.addView(resume, resumeParams);
             } else {
-                LinearLayout.LayoutParams resumeParams = lp(300, 48);
+                LinearLayout.LayoutParams resumeParams = lp(320, 50);
                 resumeParams.topMargin = dp(14);
                 resumeParams.leftMargin = dp(12);
+                resumeParams.bottomMargin = dp(4);
                 buttonRow.addView(resume, resumeParams);
             }
         }
@@ -424,7 +428,7 @@ public class MainActivity extends Activity {
     private void showAboutDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("NOVA PDF")
-                .setMessage("Version 1.1.0\n\n"
+                .setMessage("Version 1.0\n\n"
                         + "Licensed under the MIT License\n"
                         + "Copyright \u00A9 2026 patilomkar7570\n\n"
                         + "A private, distraction-free document reader for Android.\n"

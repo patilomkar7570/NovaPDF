@@ -43,15 +43,15 @@ All processing occurs entirely on your device. The application does not request 
 | Parameter | Value |
 | :--- | :--- |
 | **Application ID** | `app.stillpdf.reader` *(Preserved for 100% upgrade compatibility with previous installs)* |
-| **Version Name** | `1.1.0` |
-| **Version Code** | `2` |
+| **Version Name** | `1.0` |
+| **Version Code** | `3` |
 | **Minimum SDK** | Android 6.0 Marshmallow (API 23) |
 | **Target SDK** | Android 14 (API 34) |
 | **Compile SDK** | Android 15 (API 35) |
 | **Language** | Native Java 17 |
 | **Rendering Engine** | Android `PdfRenderer` |
 | **Search Engine** | PDFBox-Android 2.0.27.0 |
-| **Distribution** | Signed Release APK (`NOVA-PDF-Android-v1.1.0.apk`) |
+| **Distribution** | Signed Release APK (`NOVA-PDF-Android-v1.0.apk`) |
 
 ---
 
@@ -61,11 +61,11 @@ All processing occurs entirely on your device. The application does not request 
 
 You can download the official signed release APK directly from the [GitHub Releases](https://github.com/patilomkar7570/NovaPDF/releases) page or workflow artifacts:
 
-- **Artifact Name:** `NOVA-PDF-Android-v1.1.0.apk`
+- **Artifact Name:** `NOVA-PDF-Android-v1.0.apk`
 
 ### Installation Steps
 
-1. Transfer or download `NOVA-PDF-Android-v1.1.0.apk` to your Android device.
+1. Transfer or download `NOVA-PDF-Android-v1.0.apk` to your Android device.
 2. Open your device's file manager or browser downloads and tap the APK.
 3. If prompted, allow "Install unknown apps" from your file manager or browser.
 4. Tap **Install** (or **Update**).
@@ -118,7 +118,7 @@ On every push or manual `workflow_dispatch`, GitHub Actions:
 2. Decodes the signing keystore securely from repository secrets (`ANDROID_KEYSTORE_BASE64`).
 3. Compiles the release build with `gradle assembleRelease`.
 4. Validates the signature scheme with `apksigner verify --verbose` and prints certificate details with `keytool`.
-5. Uploads `NOVA-PDF-Android-v1.1.0.apk` as a workflow artifact.
+5. Uploads `NOVA-PDF-Android-v1.0.apk` as a workflow artifact.
 
 ---
 
