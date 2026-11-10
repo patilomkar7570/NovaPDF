@@ -1,7 +1,7 @@
 NOVA PDF
 Copyright (c) 2026 patilomkar7570
 
-NOVA PDF is a private, local-first document reading ecosystem providing native applications for Android and Windows.
+NOVA PDF is a private, local-first document reading application for Android phone and tablet devices.
 
 Third-Party Licenses and Dependencies:
 
@@ -10,15 +10,4 @@ Third-Party Licenses and Dependencies:
      Licensed under the Apache License, Version 2.0
      https://www.apache.org/licenses/LICENSE-2.0
 
-2. Desktop Edition:
-   - PDF.js (pdfjs-dist)
-     Licensed under the Apache License, Version 2.0
-     https://www.apache.org/licenses/LICENSE-2.0
-   - React
-     Licensed under the MIT License
-     https://opensource.org/licenses/MIT
-   - Electron
-     Licensed under the MIT License
-     https://opensource.org/licenses/MIT
-
-NOVA PDF does not include advertisements, user accounts, analytics, or telemetry tracking SDKs in either the Android or Windows desktop edition. All document processing and rendering occur strictly on the user's local device.
+NOVA PDF does not include advertisements, user accounts, analytics, or telemetry tracking SDKs. All document processing and rendering occur strictly on the user's local device.

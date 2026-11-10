@@ -1,11 +1,11 @@
-# NOVA PDF — Private, Offline Document Reader Ecosystem
+# NOVA PDF — Private, Offline PDF Reader for Android
 
 <p align="center">
   <img src="assets/branding/nova-logo-black.png" alt="NOVA PDF Logo" width="128" height="128" />
 </p>
 
 <p align="center">
-  <strong>A modern, privacy-first PDF reader ecosystem for Android and Windows Desktop.</strong><br>
+  <strong>A modern, distraction-free, privacy-first PDF reader for Android phones, foldables, and tablets.</strong><br>
   No advertisements. No analytics. No account requirements. 100% offline and local.
 </p>
 
@@ -13,211 +13,123 @@
 
 ## Overview
 
-**NOVA PDF** is an independent, distraction-free document reading application available across two dedicated platforms:
+**NOVA PDF** is an independent, native Android document reader engineered for speed, privacy, and readability across all form factors.
 
-1. **NOVA PDF Android** — Native Android application designed for phones, foldables, and tablets, featuring responsive multi-column layouts, page thumbnail navigation, and offline text search.
-2. **NOVA PDF Desktop** — Native Windows desktop application featuring fast PDF.js rendering, page thumbnails, bookmarks, document history, text search, print support, and full keyboard navigation.
+Whether reading on a compact smartphone, a foldable device, or a large Android tablet, NOVA PDF adapts smoothly to your screen size with responsive multi-column layouts, page thumbnails, in-document text search, bookmarks, and last-read page restoration.
 
-Both editions share a unified visual identity, minimal aesthetic, and a strict local-first privacy standard: your files never leave your device.
+All processing occurs entirely on your device. The application does not request internet permission and never transmits your documents.
 
 ---
 
 ## Key Features
 
-| Capability | NOVA PDF Android | NOVA PDF Windows Desktop |
-| :--- | :--- | :--- |
-| **Engine** | Native Android `PdfRenderer` + PDFBox-Android | PDF.js + Electron + React + TypeScript |
-| **Layouts** | Adaptive: Compact (<600dp), Medium (600–839dp), Expanded (840dp+) | Professional desktop window, resizable, collapsible sidebar |
-| **Document Navigation** | Page switcher, direct page jump dialog, thumbnail rail | Prev/Next, direct page input, multi-page thumbnail sidebar |
-| **Text Search** | In-document text extraction with match jumping | Real-time text search with occurrence counter and match stepping |
-| **Bookmarks** | Per-document bookmark management | Instant bookmarking, persistent sidebar list, quick jump |
-| **Reading State** | Automatically remembers last page read per document | Remembers last document and page position per document |
-| **Themes** | High-contrast Light and Dark modes | High-contrast Light and Dark modes with instant toggle |
-| **Display Zoom** | Multi-level zoom controls with reset & fit | Preset zoom levels, Fit to Width, Fit to Page, manual zoom |
-| **Print Support** | System document intent integration | Native Windows print dialog integration (`Ctrl + P`) |
-| **File Opening** | System document picker & Android Share Intent | Native Windows file picker (`Ctrl + O`) & Drag and Drop |
-| **Privacy & Offline** | 0 trackers, 0 ads, 0 analytics, no internet permission | 100% offline, local persistence, isolated Electron sandbox |
+- **⚡ Fast Native Rendering:** Powered by Android's hardware-accelerated `PdfRenderer` for sharp, high-DPI rendering without bloat.
+- **📱 Phone & Tablet Adaptive Layouts:**
+  - **Compact (<600dp):** Streamlined single-column reading experience with clean controls and easy thumb navigation.
+  - **Medium (600–839dp):** Two-column document library (Recent Documents and Bookmarks side-by-side) with expanded reading controls.
+  - **Expanded (840dp+):** Collapsible thumbnail navigation sidebar, dual-column library, and spacious reading area.
+- **🔍 Full Text Search:** In-document text extraction and searching powered by PDFBox-Android with match stepping and navigation.
+- **📑 Page Thumbnails Panel:** Collapsible thumbnail rail for rapid visual scanning across pages.
+- **★ Bookmarks & Reading History:** Bookmark important pages and resume reading exactly where you left off.
+- **🌗 Light & Dark Themes:** High-contrast reading themes designed to minimize eye strain in any lighting condition.
+- **🔍 Multi-Level Zoom & Jump Dialog:** Smooth zoom controls (50% to 300%) with reset button and direct page jump dialog.
+- **⌨️ Keyboard & Hardware Support:** Full navigation support via arrow keys, Page Up/Down, Space, and shortcuts (`Ctrl + F`, `Ctrl + B`, `Ctrl + Plus`, `Ctrl + Minus`).
+- **🔒 Absolute Privacy:** Zero trackers, zero ads, zero analytics, zero cloud connections.
 
 ---
 
-## UI & Screenshots
+## Technical Specifications
 
-```
-+-------------------------------------------------------------------------------+
-|  NOVA PDF Desktop                                          [ - ] [ # ] [ X ]  |
-+-------------------------------------------------------------------------------+
-| [NOVA] Open PDF (Ctrl+O) | [<<] Page [ 12 ] / 45 [>>] | Zoom [100% v] | [Search] [★] |
-+------------------+------------------------------------------------------------+
-| Thumbnails       |                                                            |
-| +--------------+ |                       DOCUMENT CANVAS                      |
-| |    Page 1    | |                                                            |
-| +--------------+ |                                                            |
-| +--------------+ |                                                            |
-| |  [Page 12]   | |                                                            |
-| +--------------+ |                                                            |
-| +--------------+ |                                                            |
-| |    Page 13   | |                                                            |
-| +--------------+ |                                                            |
-+------------------+------------------------------------------------------------+
-```
-
----
-
-## Current Versions & Compatibility
-
-- **NOVA PDF Android:** `v1.1.0` (versionCode: `2`)
-  - Application ID: `app.stillpdf.reader` *(preserved for seamless upgrade compatibility)*
-  - Minimum Android Version: Android 6.0 (API 23)
-  - Target SDK: Android 14 (API 34)
-  - Compile SDK: Android 15 (API 35)
-  - Java Version: Java 17
-- **NOVA PDF Desktop:** `v1.0.0`
-  - Platform: Windows 10 / Windows 11 (x64)
-  - Distribution: Windows Installer (`NOVA-PDF-Windows-Setup-v1.0.0.exe`)
-
----
-
-## Downloads
-
-### 📱 Android Installation
-
-Download the official signed release APK:
-- [Download NOVA PDF Android v1.1.0 APK](https://github.com/patilomkar7570/StillPDF/releases) *(Artifact name: `NOVA-PDF-Android-v1.1.0.apk`)*
-
-**Installation steps:**
-1. Download the `.apk` file to your Android phone or tablet.
-2. Tap the downloaded file. When prompted, allow installing applications from your browser or file manager.
-3. Tap **Install**. If updating from v1.0.0, your recent documents, bookmarks, and preferences will be preserved automatically.
-
-### 💻 Windows Desktop Installation
-
-Download the official Windows installer:
-- [Download NOVA PDF Windows Setup v1.0.0](https://github.com/patilomkar7570/StillPDF/releases) *(Artifact name: `NOVA-PDF-Windows-Setup-v1.0.0.exe`)*
-
-**Installation steps:**
-1. Download `NOVA-PDF-Windows-Setup-v1.0.0.exe`.
-2. Double-click the installer and choose your preferred installation directory.
-3. Launch NOVA PDF from your Desktop or Start Menu.
-
----
-
-## Keyboard Shortcuts (Desktop)
-
-| Shortcut | Action |
+| Parameter | Value |
 | :--- | :--- |
-| **Ctrl + O** | Open PDF via native Windows file dialog |
-| **Ctrl + F** | Open or toggle the text search bar |
-| **Ctrl + P** | Open native Windows print dialog |
-| **Ctrl + B** | Toggle collapsible sidebar (Thumbnails / Bookmarks / Recents) |
-| **Ctrl + +** / **Ctrl + =** | Zoom in (+25%) |
-| **Ctrl + -** | Zoom out (-25%) |
-| **Ctrl + 0** | Reset zoom to 100% |
-| **PageDown** / **Right Arrow** / **Space** | Next page |
-| **PageUp** / **Left Arrow** | Previous page |
-| **Home** | First page |
-| **End** | Last page |
-| **Escape** | Dismiss search bar or active dialog |
+| **Application ID** | `app.stillpdf.reader` *(100% upgrade compatible with StillPDF v1.0.0)* |
+| **Version Name** | `1.1.0` |
+| **Version Code** | `2` |
+| **Minimum SDK** | Android 6.0 Marshmallow (API 23) |
+| **Target SDK** | Android 14 (API 34) |
+| **Compile SDK** | Android 15 (API 35) |
+| **Language** | Native Java 17 |
+| **Rendering Engine** | Android `PdfRenderer` |
+| **Search Engine** | PDFBox-Android 2.0.27.0 |
+| **Distribution** | Signed Release APK (`NOVA-PDF-Android-v1.1.0.apk`) |
+
+---
+
+## Installation
+
+### Download Signed Release APK
+
+You can download the official signed release APK directly from the [GitHub Releases](https://github.com/patilomkar7570/StillPDF/releases) page or workflow artifacts:
+
+- **Artifact Name:** `NOVA-PDF-Android-v1.1.0.apk`
+
+### Installation Steps
+
+1. Transfer or download `NOVA-PDF-Android-v1.1.0.apk` to your Android device.
+2. Open your device's file manager or browser downloads and tap the APK.
+3. If prompted, allow "Install unknown apps" from your file manager or browser.
+4. Tap **Install** (or **Update**).
+5. All your existing recent documents, bookmarks, and preferences from previous versions are automatically preserved!
 
 ---
 
 ## Building from Source
 
-### 1. Android Application (`app/`)
+### Prerequisites
 
-**Prerequisites:**
-- JDK 17
-- Android SDK Platform 35 & Build-Tools 35.0.0
-- Gradle 8.9+
+- Java Development Kit (JDK) 17
+- Android SDK (Build Tools 35.0.0, Platform API 35)
+- Gradle 8.9
 
-**Build commands:**
+### Build Debug APK
 
 ```bash
-# Clone the repository
-git clone https://github.com/patilomkar7570/StillPDF.git
-cd StillPDF
-
-# Build Debug APK
 gradle assembleDebug
+```
 
-# Output APK location:
-# app/build/outputs/apk/debug/app-debug.apk
+The debug APK will be generated at:
+`app/build/outputs/apk/debug/app-debug.apk`
 
-# Build Release APK (requires signing environment variables)
+### Build Signed Release APK
+
+Provide your signing credentials as environment variables:
+
+```bash
 export ANDROID_KEYSTORE_FILE="/path/to/keystore.jks"
 export ANDROID_KEYSTORE_PASSWORD="your-keystore-password"
-export ANDROID_KEY_ALIAS="stillpdf"
+export ANDROID_KEY_ALIAS="your-key-alias"
 export ANDROID_KEY_PASSWORD="your-key-password"
 
 gradle assembleRelease
-
-# Output APK location:
-# app/build/outputs/apk/release/app-release.apk
 ```
 
-### 2. Windows Desktop Application (`desktop/`)
-
-**Prerequisites:**
-- Node.js LTS (v20+ or v22+)
-- npm 10+
-- Windows 10/11 x64 build environment
-
-**Build commands:**
-
-```bash
-# Navigate to the desktop directory
-cd desktop
-
-# Install dependencies
-npm ci
-
-# Run development server with live reload
-npm run dev
-
-# Build production assets (Vite React + Electron TypeScript)
-npm run build
-
-# Package Windows NSIS x64 Installer
-npm run dist
-
-# Output installer location:
-# desktop/release/NOVA-PDF-Windows-Setup-v1.0.0.exe
-```
+The signed release APK will be generated at:
+`app/build/outputs/apk/release/app-release.apk`
 
 ---
 
-## GitHub Actions CI/CD Automation
+## Continuous Integration (GitHub Actions)
 
-This repository includes automated GitHub Actions workflows:
+The repository includes an automated CI/CD release workflow located at:
+`.github/workflows/build-apk.yml`
 
-### Android Release Workflow (`.github/workflows/build-apk.yml`)
-- Triggers on manual dispatch (`workflow_dispatch`) and pushes to `main`, `master`, and `feature/**`.
-- Compiles with Java 17, Android SDK 35, and Gradle 8.9.
-- Decodes the release keystore using repository secret `ANDROID_KEYSTORE_BASE64`.
-- Signs the APK using `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and `ANDROID_KEY_PASSWORD`.
-- Verifies APK signature with `apksigner` and `keytool`.
-- Uploads the signed APK artifact as `NOVA-PDF-Android-v1.1.0.apk`.
-
-### Windows Desktop Workflow (`.github/workflows/build-desktop.yml`)
-- Triggers on manual dispatch (`workflow_dispatch`) and pushes with changes in `desktop/**`.
-- Runs on `windows-latest` with Node.js LTS.
-- Builds the React front-end and Electron TypeScript back-end.
-- Packages the standalone installer using `electron-builder`.
-- Uploads the Windows installer artifact as `NOVA-PDF-Windows-Setup-v1.0.0.exe`.
+On every push or manual `workflow_dispatch`, GitHub Actions:
+1. Sets up JDK 17, Gradle 8.9, and Android SDK Build Tools 35.0.0.
+2. Decodes the signing keystore securely from repository secrets (`ANDROID_KEYSTORE_BASE64`).
+3. Compiles the release build with `gradle assembleRelease`.
+4. Validates the signature scheme with `apksigner verify --verbose` and prints certificate details with `keytool`.
+5. Uploads `NOVA-PDF-Android-v1.1.0.apk` as a workflow artifact.
 
 ---
 
-## Privacy Policy & Architecture
+## Privacy Policy
 
-NOVA PDF is designed from the ground up as a private, offline tool:
-
-- **Zero Cloud Dependence:** PDF parsing, rendering, text stripping, and page searching are performed entirely on the local CPU/GPU.
-- **Zero Telemetry:** No tracking libraries, analytics SDKs, error reporting beacons, or advertisement networks are present in either project.
-- **No Internet Permissions:** The Android app requests neither `android.permission.INTERNET` nor `ACCESS_NETWORK_STATE`.
-- **Local Persistence:** Reading position, bookmarks, and UI preferences are stored in private local app storage (`SharedPreferences` on Android, local JSON in user data on Windows).
+NOVA PDF does not collect, transmit, store, or share any personal information, usage metrics, or document contents.
+All PDF reading and search operations are performed entirely in-memory and on-device.
 
 ---
 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-Third-party component notices and licenses are documented in [NOTICE.md](NOTICE.md).
+Third-party licenses are documented in [NOTICE.md](NOTICE.md).
