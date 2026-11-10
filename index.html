@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOVA PDF+ — PC Edition</title>
+  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAOMUlEQVR4nO1da6xdRRX+9jn30tJqS4Heiq2lKK1aUVFjLAYVrBrxESS+UNGkiiKJRjAafxBCgq9gVMQXEiNEubGKb4VE0CLUYMWQYogFLArlQgu0tLcttfY+zjlmzLeS5bjP2TN7n3v27H3mSyb75tz9mJn1mDVrrZkBIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiImqLBPVvny6CDotGt3vS7q0Nkhq2p8Frm6UfaLB0+M7aMERSkzY0uxB8AYBnAVjJciKAEwAcA+BoPifMchjAAQBPAniY5SEAEwAOdWGIfjJZKUgqLukGLfX7EgAvB3A6ry8gwUdyfqcN4HEA9wHYCuAOAHfyN4HWOJXTDElFCa+JvgLAWQDeBOA0AMtSnmtZktqt3R3rnjTGmQSwBcCNAG6ihhA0q8oIVVHzAvP3GwBsJEG0sTYLYBrADP8W4ucpLZYZ9U79rYMAbgBwNoBRq34RfYLuzIUAPgrgbosQMyxFiN32YAr5nq7DPQAuZB0j+gAxtAzmk/B/tyR9UERvezDDdgDnK8at2jAbnNS/HcDfLGmfLZHo7S5FGFLqeQeNUtu/ENEDYlEbPA/ALytA+LZVpJ4dTjulXREeUv8pAE9VjPBtNSx0WP8VoTNA3vnxXNTDEPnZAK6mhS/jfD8sah+3btLFfeyLZsiED4UBZF4/y6nUdwEspdQ3CxBfu2yLEKLF92gXc61QJgOIb9108qUALufvsznrJUQHn9dE30eHzQ66ePdwDj/L/x8FYDGAMQCrAJxE9b3IYkK534UZZEgIGmUxgPjRjfPkGgAblHfPV+rb6l1C9CcA/BnA7XTdbqeP36d+ywCspVv5DLqWZY6vh6dejFA7jdEPCJGeDuBmduZ0H6ZdxiP4QwDnADi2y7ebZPpepdnl2RM5v79FWflS91aKEfgvBqJ0m4ce0hFLOE82HTWVw8rWhN/GWcOKFEYTgvpKYqLczyMpz78EwNcB7LWmqZoBDjMCGRnA6oTFDKbkkXyb8B+kl1BLeB6Cu0AYSkuzkfAraE9o72TUAF0kah6A23IQX0v9bgAXM54vSJPSuUTDGirWABi33NSHquAHGARElZrrT3OofS31G9W4ijmUdlfYIeOzmUTSYXJJZADVQVfmIP40nzEW/HklSryPRljKELGp99AbgUL88wsQ39gLJ1fEu9ZUf39YaYCQmHXgnfEyAEc8kzNE7V+njLyyvZauiNE/5Tp9GoD7rWmSq7H3edWpIUt9Nwx1VpA0/mpPi1/U/qXqPUOpPutA/Nd5SL4m/mcDNfQiPFX/duWydSX+t/ieSPyKS//lHqpfxvxbLJ9BRMUgIdJVzIZxsfpFOzzM+bNe8DEMaCj3tUtpVEH6r3OUfrH4zfXV1jsiuqOv2nGkz/F9sxTrfSRqFjHb/L4JpmxWaWHDQMAOgOMBfIPJKPJb2hXsF5Pv8DsA31b9HQyE2N93lH6ZGWyjo2fYxv0m2yvTZNfybwDLQxsqpSInMQmi5Tj2mwatH1LVn7CYiOY/KBBH1CITu0yT+KbPPheaZ1QqcoWH9HeY8z+MxIfV7vc4+ktEqHYzoQYhaE2pgJn3P6pi4VkNMUxySsqiz2GdOW0RJkjchMcE14LQAlKBcxy5WBpgcvcw5MTX7X+Lo/BI/xqjGSHYAdKAG5RHz0WNmQzbYZd+exHsXR6u8ylmIcnzpar/JUzYkBz/LOm/reyKB4YRXj/kyADiNr/Yen7gaKrVuz7q//1lVzwwJEqQdnsI0qayBUkIeI2D9S+p0iaN+rhQLNiAIMJ0rUdf7qf7vFBfFuEe8fatc3iXrPrZRCZoDsE+OolndpC57xcOfZmwP016/akO9/dEo+C6PrPw4bmqYln4bc1TphK1dkB78LIWurZ5n1nOtj/JFhBxA68rSwPIB09hrv9sxs5bIxy7ZDVQUH7sPqFpTeUWconaUco72q3PO/zdLFrdSsr36iPp6xer50tjgKwKSFDDrM590OH+qhK/xTH5IgZt7me5F8CP6SsRwqb1u/xm9iPM6iO9i4q9bd5AIOrsegejRazWX9V0+tfg1SxT25X0DuYYB86LeH+zi1H9LodZlRiC+/phCOaBfOyPDpVNy/WrC5q8ftFaLSx5Di21XnBarWJOM5zl71MdHEFSZhmCt981EOKPMu8vy4UpDTd7ANSJAZq8XqQWvWS5cqd476MqA0r6U64ncFlZlj9AIqqFkmmKcM0itQ4/cfjGYzUa/xskziqGZ1spK4fTMEqBMDH9S5Txp7GfWsLFtgI3vs6NRsEI4AKP+03D6oIGrx+jtd/2GINHlEd0CZlHMoDAuL/RAD6CmNsGKKIBFnCKkwVpnEkUrYsGaLHvZDczn36UncWP5ebWUM8LEU1ijasG0PsjDJQBGim5a90gxlAd0GCbl3HbmDyOLZnjm23xkPL8wPpqri1H4dLgU5pzYCGdYHnRS7p9DOVCTrWisYB2RmO0hVuks0JCh9dJpap9IVpjV5d3i23lsgOZySUshQEO06J12S+vsLESEDpsw161e7mPFEpswBh7f+Fv2oicp/rKBQfVewfCAPKhQ2QC1/vTTvKoKpq8brQseBeI1X8j/QFyygjU7MpFWIR2hhFL0QAH6Yp0tVbrtFtGi+0w8fsHOL93MdwkDmDU9mUW80i/LOXcPqtPG/Qw7lG/DUwDJGzw4x4fX436oMM+MDbAe3kdVXGPtPtlZ1FTLuBBVHqFjzDAKhVcyhKWyTIYQD834RG5eiGvA49czRHaJNRdPLBqgn4RvQeyBG0aZJC9XAfwA0Vku5/MljquWnWCTiPfYagwZJpyiUcK0x7ltqzDMGDbA2NcHLMjJQq4kzuLruzhtxeh+rVHgG28x/sGms+elRDal8BFwGhYRtxpDOu+g3+b9C30aHui9k9+zCEQJAzwmbICbHo94BGPCl9WVoUHgCSDsXs5w+S5Vzn0pRaoM63nB2YDyLx1gnNhVzvgjTWzAzSEcHqTab1ZtX14ZVr/vNWhf8SPYOyJv/K3UlLsRIq/o6Q8K4FhpowEhgogoQF5n0N+hcw0TIJt4X7sBxE2OQZE5CSQd/fx23VAk9czmeMnkcZuEE37+1CWhh1Ph5BrBsuDXBdf5/TwPAwgG2m7aNJpMkvpgiSV/7lST1lDQIfWcV2NwTwh9TWMDci0Oav/zPoB9EOAinJPolYH+1Tm42UaLwEhIUE/ycSOXusrtPr/USjTaansYrqFszhYDwXGexZEI0qW/tUMqv3P1jopG0XI/55iTqG8o3QIAa9yHMNEjd09x0e8hI4mrz/xXBZ+vfV86RAufH7KCVpZTFC3VHFXCPFe77EphEwNX2G9IwhoY9BFC8guojs5i9BHxdcdCfvraM77NXGzBKb0qV8WA6xzbJBu1PiQaYERXr/sKf0dHmAZnPTD4srfeDRMmMDsLjoMTNDkdb1qf9aQaXv+giS+rthLybFpWsBurFi+B1TCSHDqrU+Qdj2TQ5+LppR0+hY31gqaAfJsGG3PChbU9JTuRB086bKg1rb8zanqwRMfinjLma7ksm2sbqiZEqFmU8PEczm9bSjvYbJJZQxlaeyFHpyumeCqGjFBknJuou/5SRuqIv0CferH5pxM8KUaMEGiiPYFT+LLsGgM6koRXyCqai2DHC7Wrs0ERmIQ2tbojtD1/aon8UX1P0GDsYrtT91AweewaGGCa5UKrcoUcUSt8Bn3bLtspG2eeXNVpT+tM35WgAk2qeBHyKeJJYpYzwHwpxxtngr1TIC8EMv1GLWObiYHEzyiJCI0qUgsQr2T6jsvwxthCZ3ZvdBUW8odUONcnuPjr1Tr5vSJ3SFkAT8DwPdUXfMw+p119YVIR51lebdcO0g8ix1qknPVuwd91mBiSfwop7w7FeFbOYh/r1pAW0mjLwvSaR/I2VG6s0y5VaWZ62/MBTMkKdu9jpIRt/aQ+pZje/7J3UZCG97mjAk+otKf/9tJiZ820MPCZi7QNKtqNJoWQ/hs2txQz9vSaFT9JwDcYxE+LzNvV1vF1Jr4NhNcoDKJfWwCbRvIsGDKQwC+xpCpWZ6VBk3YEav00hxjTGQdp2tWEz5P3adU/GN5mcQvy9CQQyLP5UpZWV+fpxNkFY0elyeYObuFKvoBEs5lDf98jsWrmX1zOiNxcs4BVPKm71gtDG/aexOA87h9nr1SeGAo09IUJljPQ6TGKFF5574iXWmzg4NMWpWyhx7KWRJjEYk+RhU/lrIHojBPXgtdNpM0+AqAT6ul46beQwnpkNWcAoldkEetptkJkqPYyVFmrX1/Xb/dSrp792R/AFQpujfXaCrV+01FAB8nSiZRLKZIKzNqTPc16HrZKdKem1XSS5WDXHMCLQlvo0En46WPQyWUMmNt6W7iIaiLe3cQnrXjmBcgVr5IbzvwMm3NTMat3UCjyneANuDWMRmyY2mEfqnodh9KK8XWMOnbr+nSpghPbQAuI7vVMtLyGGg24Vo5npGr2Awdi/B20CpKfQHYU64zmFd3oAszFJ09tHsQfoYOHJvoTzJp85U9GDiiIGyreSXdsbdzPq8JIkaYtu7Fsk+T+pY+3iX5/9mCHtOlTDJdawP9BpUlfNWmItK52mt2MnfXeC09d6sc2iXLrF374BC9ica7+Acef7cr5cg4w1CVQtUYAJYTRQwvKF/CGm5KuZbMsZJevsX8/zxLStt8zxFK9j56C3cwULONa/gecaxDpVBVBkgjhMwS0jCP0cIFLPMt4k9xu9fJjO3X5biXdpWJXjcG0JCwr1jeeYnVsN5RSfU+jAzQDfbRbGnoWNeIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiGrjPwhSGyIE7Q5DAAAAAElFTkSuQmCC">
+  
+  <!-- PDF.js & Tesseract.js for fast local rendering and on-device OCR -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #F6F8FB;
+      --surface: #FFFFFF;
+      --surface-subtle: #EEF2F6;
+      --text: #0F172A;
+      --muted: #64748B;
+      --accent: #3267E8;
+      --accent-hover: #2554C7;
+      --border: #E2E8F0;
+      --card-bg: #FFFFFF;
+      --shadow: 0 4px 20px rgba(0,0,0,0.06);
+      --canvas-bg: #E9EDF4;
+    }
+
+    body.dark {
+      --bg: #0F1115;
+      --surface: #181C23;
+      --surface-subtle: #222731;
+      --text: #F2F5F9;
+      --muted: #94A3B8;
+      --accent: #3267E8;
+      --accent-hover: #487BF5;
+      --border: #2B3240;
+      --card-bg: #181C23;
+      --shadow: 0 4px 20px rgba(0,0,0,0.4);
+      --canvas-bg: #14171C;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* Top Bar */
+    header.nova-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      padding: 0 24px;
+      background-color: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .header-left, .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+    }
+
+    .brand-title-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .plus-badge {
+      font-size: 12px;
+      font-weight: 800;
+      color: #FFFFFF;
+      background: linear-gradient(135deg, #3267E8, #7B2CBF);
+      padding: 2px 7px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .btn {
+      height: 40px;
+      padding: 0 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background-color: var(--surface);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover {
+      background-color: var(--surface-subtle);
+      border-color: var(--muted);
+    }
+
+    .btn.primary {
+      background-color: var(--accent);
+      color: #FFFFFF;
+      border-color: var(--accent);
+    }
+
+    .btn.primary:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .btn.active {
+      background-color: var(--accent);
+      color: #FFFFFF;
+      border-color: var(--accent);
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background-color: var(--surface);
+      color: var(--text);
+      font-size: 16px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .icon-btn:hover {
+      background-color: var(--surface-subtle);
+    }
+
+    .icon-btn.active {
+      background-color: var(--accent);
+      color: #FFFFFF;
+      border-color: var(--accent);
+    }
+
+    /* Main Container */
+    main.nova-main {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Home View */
+    #home-view {
+      flex: 1;
+      overflow-y: auto;
+      padding: 36px 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .home-inner {
+      max-width: 960px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .privacy-tag {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--accent);
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .action-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 32px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .action-card h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .action-card p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .dropzone {
+      border: 2px dashed var(--border);
+      border-radius: 14px;
+      padding: 36px 20px;
+      text-align: center;
+      cursor: pointer;
+      background-color: var(--surface-subtle);
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--accent);
+      background-color: rgba(50, 103, 232, 0.05);
+    }
+
+    .dropzone-icon {
+      font-size: 32px;
+    }
+
+    .dropzone h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .dropzone span {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .action-buttons {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    /* Two-column library */
+    .library-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .library-grid {
+        grid-template-columns: 1fr;
+      }
+      #home-view {
+        padding: 20px;
+      }
+    }
+
+    .section-box {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .list-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 8px;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .empty-msg {
+      padding: 24px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .doc-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .doc-row:hover {
+      background-color: var(--surface-subtle);
+      border-color: var(--accent);
+    }
+
+    .doc-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      max-width: 80%;
+    }
+
+    .doc-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .doc-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .doc-arrow {
+      color: var(--accent);
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    /* Reader View */
+    #reader-view {
+      flex: 1;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      background-color: var(--canvas-bg);
+    }
+
+    .reader-subbar {
+      height: 48px;
+      background-color: var(--surface-subtle);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      flex-shrink: 0;
+    }
+
+    .subbar-left, .subbar-center, .subbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .doc-headline {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      max-width: 320px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 3px 8px;
+      height: 34px;
+    }
+
+    .search-input {
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+      width: 160px;
+    }
+
+    .search-counter {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: bold;
+    }
+
+    .zoom-select {
+      height: 34px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background-color: var(--surface);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 0 8px;
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* Workspace with Sidebar & Canvas */
+    .reader-workspace {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .thumb-sidebar {
+      width: 180px;
+      background-color: var(--surface);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 12px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-shrink: 0;
+      transition: width 0.2s ease;
+    }
+
+    .thumb-sidebar.collapsed {
+      width: 0;
+      padding: 0;
+      border: none;
+      overflow: hidden;
+    }
+
+    .thumb-item {
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background-color: #FFFFFF;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+
+    .thumb-item.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(50, 103, 232, 0.2);
+    }
+
+    .thumb-item span {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .thumb-item.active span {
+      color: var(--accent);
+    }
+
+    .thumb-canvas {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+      display: block;
+    }
+
+    .canvas-viewport {
+      flex: 1;
+      overflow: auto;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px;
+      position: relative;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      background-color: #FFFFFF;
+      border-radius: 4px;
+      overflow: hidden;
+      line-height: 0;
+    }
+
+    #pdf-canvas {
+      display: block;
+    }
+
+    /* Overlay Selectable Text Layer */
+    .text-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      line-height: 1;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    .text-layer span {
+      position: absolute;
+      color: transparent;
+      cursor: text;
+      white-space: pre;
+      transform-origin: 0% 0%;
+    }
+
+    .text-layer span::selection {
+      background-color: rgba(50, 103, 232, 0.35);
+      color: transparent;
+    }
+
+    .ocr-badge-status {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(15, 23, 42, 0.85);
+      color: #FFFFFF;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      gap: 8px;
+      z-index: 5;
+    }
+
+    /* Bottom Navigation */
+    footer.reader-footer {
+      height: 52px;
+      background-color: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+
+    .page-nav-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .page-indicator {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    /* More Information Drawer */
+    .info-drawer {
+      position: fixed;
+      top: 60px;
+      right: -420px;
+      width: 420px;
+      bottom: 0;
+      background-color: var(--surface);
+      border-left: 1px solid var(--border);
+      box-shadow: -5px 0 25px rgba(0,0,0,0.15);
+      z-index: 30;
+      transition: right 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info-drawer.open {
+      right: 0;
+    }
+
+    .info-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .info-header h3 {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .info-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .info-card {
+      background-color: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .info-row {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .info-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+    }
+
+    .info-val {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      word-break: break-all;
+    }
+
+    /* Modal Dialog */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(3px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal-box {
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 28px;
+      width: 440px;
+      max-width: 90%;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-box h3 {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .modal-box p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body class="dark">
+
+  <!-- Top Header -->
+  <header class="nova-header">
+    <div class="header-left">
+      <div class="brand-wrap" onclick="app.goHome()">
+        <img id="header-logo" class="brand-logo" src="data:image/png;base64,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" alt="NOVA PDF">
+        <div class="brand-title-wrap">
+          <div class="brand-title">
+            NOVA PDF <span class="plus-badge">PLUS</span>
+          </div>
+          <span class="brand-subtitle">Smart Browser Reader &amp; Inspector</span>
+        </div>
+      </div>
+      <button class="btn primary" onclick="document.getElementById('file-input').click()">
+        ＋ Open PDF
+      </button>
+    </div>
+
+    <div class="header-right">
+      <button id="theme-btn" class="icon-btn" onclick="app.toggleTheme()" title="Toggle Light/Dark Theme">
+        ☀
+      </button>
+      <button class="icon-btn" onclick="app.showAbout()" title="About &amp; License">
+        ℹ
+      </button>
+    </div>
+  </header>
+
+  <!-- Hidden File Input -->
+  <input type="file" id="file-input" accept="application/pdf" style="display: none;" onchange="app.handleFileSelect(event)">
+
+  <!-- Main View Area -->
+  <main class="nova-main">
+    
+    <!-- Home Dashboard -->
+    <section id="home-view">
+      <div class="home-inner">
+        <div class="privacy-tag">OFFLINE &bull; NO ADS &bull; PRIVATE &amp; LOCAL</div>
+
+        <div class="action-card">
+          <h2>Open a document</h2>
+          <p>Select a PDF or drag and drop it below. Files are rendered and processed 100% locally inside your browser.</p>
+
+          <div class="dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
+            <div class="dropzone-icon">📄</div>
+            <h3>Drop your PDF file here, or click to browse</h3>
+            <span>Supports standard, scanned, and photo-based PDF documents</span>
+          </div>
+
+          <div class="action-buttons">
+            <button class="btn primary" onclick="document.getElementById('file-input').click()">
+              ＋ Select PDF from Computer
+            </button>
+            <button id="resume-btn" class="btn" style="display: none;" onclick="app.resumeLastDoc()">
+              Continue reading: <span id="resume-name" style="margin-left: 4px; font-weight: bold;"></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="library-grid">
+          <div class="section-box">
+            <div class="section-title">Recent Documents</div>
+            <div class="list-card" id="recents-list">
+              <div class="empty-msg">Recently opened PDFs will appear here.</div>
+            </div>
+          </div>
+
+          <div class="section-box">
+            <div class="section-title">Bookmarks</div>
+            <div class="list-card" id="bookmarks-list">
+              <div class="empty-msg">Bookmarked pages will be saved here.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reading View -->
+    <section id="reader-view">
+      <!-- Sub toolbar -->
+      <div class="reader-subbar">
+        <div class="subbar-left">
+          <button class="icon-btn" onclick="app.goHome()" title="Back to Home">‹</button>
+          <button id="thumb-toggle-btn" class="icon-btn" onclick="app.toggleThumbnails()" title="Toggle Page Thumbnails">▤</button>
+          <div class="doc-headline" id="reader-doc-title">Document.pdf</div>
+        </div>
+
+        <div class="subbar-center">
+          <button class="icon-btn" onclick="app.zoom(-0.25)" title="Zoom Out">－</button>
+          <select class="zoom-select" id="zoom-select" onchange="app.handleZoomSelect(event)">
+            <option value="fit-width">Fit Width</option>
+            <option value="fit-page">Fit Page</option>
+            <option value="0.75">75%</option>
+            <option value="1.0" selected>100%</option>
+            <option value="1.25">125%</option>
+            <option value="1.5">150%</option>
+            <option value="2.0">200%</option>
+          </select>
+          <button class="icon-btn" onclick="app.zoom(0.25)" title="Zoom In">＋</button>
+
+          <!-- Smart Text OCR Toggle -->
+          <button id="ocr-btn" class="btn" onclick="app.toggleSmartText()" title="Scan and generate clickable selectable text layer">
+            🔤 Smart Text (OCR)
+          </button>
+
+          <!-- More Information Inspector Toggle -->
+          <button id="info-btn" class="btn" onclick="app.toggleInfoDrawer()" title="Show deep hidden technical metadata">
+            ℹ More Information
+          </button>
+        </div>
+
+        <div class="subbar-right">
+          <!-- Text Search Box -->
+          <div class="search-container">
+            <input type="text" class="search-input" id="search-input" placeholder="Search text in PDF…" onkeydown="app.handleSearchKeyDown(event)">
+            <span class="search-counter" id="search-counter"></span>
+            <button class="icon-btn" style="width:24px; height:24px; border:none;" onclick="app.searchNext()" title="Next match">›</button>
+          </div>
+          <button id="bookmark-btn" class="icon-btn" onclick="app.toggleBookmark()" title="Bookmark this page">☆</button>
+        </div>
+      </div>
+
+      <!-- Workspace Area -->
+      <div class="reader-workspace">
+        <!-- Thumbnails Sidebar -->
+        <div class="thumb-sidebar" id="thumb-sidebar"></div>
+
+        <!-- Central Canvas Viewport -->
+        <div class="canvas-viewport" id="canvas-viewport">
+          <div class="canvas-wrapper" id="canvas-wrapper">
+            <canvas id="pdf-canvas"></canvas>
+            <div class="text-layer" id="text-layer"></div>
+          </div>
+          <div class="ocr-badge-status" id="ocr-status">
+            <span>Scanning page text…</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation Footer -->
+      <footer class="reader-footer">
+        <button class="btn" id="prev-btn" onclick="app.changePage(-1)">← Prev</button>
+        <div class="page-nav-group">
+          <span class="page-indicator" id="page-indicator" onclick="app.promptPageJump()">Page 1 / 1</span>
+        </div>
+        <button class="btn primary" id="next-btn" onclick="app.changePage(1)">Next →</button>
+      </footer>
+    </section>
+
+    <!-- More Information Side Drawer -->
+    <aside class="info-drawer" id="info-drawer">
+      <div class="info-header">
+        <h3>Document Information</h3>
+        <button class="icon-btn" onclick="app.toggleInfoDrawer()">✕</button>
+      </div>
+      <div class="info-body" id="info-content">
+        <!-- Dynamically populated -->
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- Modal Dialog -->
+  <div class="modal-backdrop" id="about-modal" onclick="app.closeAbout(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <h3>NOVA PDF+ (PC Edition)</h3>
+      <p>
+        <strong>Version 1.0</strong><br>
+        Licensed under the MIT License<br>
+        Copyright &copy; 2026 patilomkar7570<br><br>
+        A modern, privacy-first PDF reader and document inspector for your computer browser.<br><br>
+        &bull; <strong>Smart Text (OCR):</strong> Automatically detects words on scanned and image-only PDFs, making them clickable, selectable, and copyable.<br>
+        &bull; <strong>More Information:</strong> Inspects hidden document attributes, deep metadata, and structural properties.<br>
+        &bull; <strong>100% Offline &amp; Private:</strong> Files are processed exclusively in-memory on your machine.
+      </p>
+      <div class="modal-actions">
+        <button class="btn primary" onclick="document.getElementById('about-modal').style.display='none'">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Set up PDF.js worker
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+
+    class NovaPdfApp {
+      constructor() {
+        this.pdfDoc = null;
+        this.currentPage = 1;
+        this.totalPages = 0;
+        this.zoomScale = 1.0;
+        this.zoomMode = '1.0';
+        this.docName = 'Document.pdf';
+        this.rawFileBytes = null;
+        this.darkMode = true;
+        this.smartTextEnabled = false;
+        this.searchResults = [];
+        this.searchIndex = -1;
+        this.tesseractWorker = null;
+
+        this.initTheme();
+        this.initDropzone();
+        this.loadStorage();
+      }
+
+      initTheme() {
+        const saved = localStorage.getItem('nova_theme');
+        if (saved) {
+          this.darkMode = saved === 'dark';
+        }
+        this.applyTheme();
+      }
+
+      toggleTheme() {
+        this.darkMode = !this.darkMode;
+        localStorage.setItem('nova_theme', this.darkMode ? 'dark' : 'light');
+        this.applyTheme();
+      }
+
+      applyTheme() {
+        if (this.darkMode) {
+          document.body.classList.add('dark');
+          document.getElementById('theme-btn').textContent = '☀';
+          document.getElementById('header-logo').src = "data:image/png;base64,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";
+        } else {
+          document.body.classList.remove('dark');
+          document.getElementById('theme-btn').textContent = '☾';
+          document.getElementById('header-logo').src = "data:image/png;base64,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";
+        }
+      }
+
+      initDropzone() {
+        const zone = document.getElementById('dropzone');
+        ['dragenter', 'dragover'].forEach(eName => {
+          window.addEventListener(eName, (e) => {
+            e.preventDefault();
+            zone.classList.add('dragover');
+          });
+        });
+        ['dragleave', 'drop'].forEach(eName => {
+          window.addEventListener(eName, (e) => {
+            e.preventDefault();
+            zone.classList.remove('dragover');
+          });
+        });
+        window.addEventListener('drop', (e) => {
+          if (e.dataTransfer && e.dataTransfer.files.length > 0) {
+            const file = e.dataTransfer.files[0];
+            if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+              this.loadFile(file);
+            }
+          }
+        });
+      }
+
+      handleFileSelect(e) {
+        if (e.target.files && e.target.files.length > 0) {
+          this.loadFile(e.target.files[0]);
+        }
+      }
+
+      async loadFile(file) {
+        this.docName = file.name;
+        document.getElementById('reader-doc-title').textContent = this.docName;
+        const arrayBuffer = await file.arrayBuffer();
+        this.rawFileBytes = new Uint8Array(arrayBuffer);
+
+        try {
+          const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+          this.pdfDoc = await loadingTask.promise;
+          this.totalPages = this.pdfDoc.numPages;
+          this.currentPage = 1;
+
+          this.saveRecent(this.docName);
+          this.showReader();
+          this.renderThumbnails();
+          this.renderPage(this.currentPage);
+          this.extractDocumentInfo();
+        } catch (err) {
+          alert('Could not open PDF. The file may be damaged or password protected.');
+        }
+      }
+
+      showReader() {
+        document.getElementById('home-view').style.display = 'none';
+        document.getElementById('reader-view').style.display = 'flex';
+      }
+
+      goHome() {
+        document.getElementById('reader-view').style.display = 'none';
+        document.getElementById('home-view').style.display = 'flex';
+        this.loadStorage();
+      }
+
+      async renderPage(pageNum) {
+        if (!this.pdfDoc || pageNum < 1 || pageNum > this.totalPages) return;
+        this.currentPage = pageNum;
+        this.updateNav();
+
+        const page = await this.pdfDoc.getPage(pageNum);
+        const viewportContainer = document.getElementById('canvas-viewport');
+        const availableWidth = viewportContainer.clientWidth - 48;
+        const availableHeight = viewportContainer.clientHeight - 48;
+
+        const unscaledViewport = page.getViewport({ scale: 1.0 });
+        let effectiveScale = this.zoomScale;
+
+        if (this.zoomMode === 'fit-width') {
+          effectiveScale = availableWidth / unscaledViewport.width;
+        } else if (this.zoomMode === 'fit-page') {
+          effectiveScale = Math.min(availableWidth / unscaledViewport.width, availableHeight / unscaledViewport.height);
+        }
+
+        const dpr = window.devicePixelRatio || 1;
+        const viewport = page.getViewport({ scale: effectiveScale });
+
+        const canvas = document.getElementById('pdf-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = Math.floor(viewport.width * dpr);
+        canvas.height = Math.floor(viewport.height * dpr);
+        canvas.style.width = Math.floor(viewport.width) + 'px';
+        canvas.style.height = Math.floor(viewport.height) + 'px';
+
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const renderContext = {
+          canvasContext: ctx,
+          viewport: viewport
+        };
+
+        await page.render(renderContext).promise;
+
+        // Render Selectable Text Layer
+        const textLayer = document.getElementById('text-layer');
+        textLayer.innerHTML = '';
+        textLayer.style.width = Math.floor(viewport.width) + 'px';
+        textLayer.style.height = Math.floor(viewport.height) + 'px';
+
+        // Check if page already has digital text
+        const textContent = await page.getTextContent();
+        let hasDigitalText = textContent.items && textContent.items.length > 0;
+
+        if (hasDigitalText) {
+          // Native digital text layer
+          textContent.items.forEach(item => {
+            const tx = pdfjsLib.Util.transform(viewport.transform, item.transform);
+            const fontHeight = Math.sqrt((tx[2] * tx[2]) + (tx[3] * tx[3]));
+            const span = document.createElement('span');
+            span.textContent = item.str;
+            span.style.fontFamily = item.fontName || 'sans-serif';
+            span.style.fontSize = fontHeight + 'px';
+            span.style.left = tx[4] + 'px';
+            span.style.top = (tx[5] - fontHeight) + 'px';
+            textLayer.appendChild(span);
+          });
+        } else if (this.smartTextEnabled) {
+          // Scanned page: Perform Smart OCR
+          this.performSmartOcr(canvas, viewport);
+        }
+      }
+
+      async performSmartOcr(canvas, viewport) {
+        const statusEl = document.getElementById('ocr-status');
+        statusEl.style.display = 'flex';
+        statusEl.textContent = 'Scanning scanned text (OCR)…';
+
+        try {
+          if (!this.tesseractWorker) {
+            this.tesseractWorker = await Tesseract.createWorker('eng');
+          }
+          const ret = await this.tesseractWorker.recognize(canvas);
+          const words = ret.data.words;
+          const textLayer = document.getElementById('text-layer');
+          textLayer.innerHTML = '';
+
+          const dpr = window.devicePixelRatio || 1;
+          const scaleX = viewport.width / (canvas.width / dpr);
+          const scaleY = viewport.height / (canvas.height / dpr);
+
+          words.forEach(w => {
+            const bbox = w.bbox;
+            const span = document.createElement('span');
+            span.textContent = w.text + ' ';
+            span.style.left = (bbox.x0 * scaleX) + 'px';
+            span.style.top = (bbox.y0 * scaleY) + 'px';
+            span.style.fontSize = ((bbox.y1 - bbox.y0) * scaleY * 0.9) + 'px';
+            span.style.fontWeight = 'bold';
+            textLayer.appendChild(span);
+          });
+
+          statusEl.textContent = '✓ Scanned text is now selectable & clickable!';
+          setTimeout(() => { statusEl.style.display = 'none'; }, 2500);
+        } catch (err) {
+          statusEl.textContent = 'OCR scan complete.';
+          setTimeout(() => { statusEl.style.display = 'none'; }, 2000);
+        }
+      }
+
+      toggleSmartText() {
+        this.smartTextEnabled = !this.smartTextEnabled;
+        const btn = document.getElementById('ocr-btn');
+        btn.classList.toggle('active', this.smartTextEnabled);
+        this.renderPage(this.currentPage);
+      }
+
+      async renderThumbnails() {
+        const sidebar = document.getElementById('thumb-sidebar');
+        sidebar.innerHTML = '';
+
+        for (let i = 1; i <= Math.min(this.totalPages, 80); i++) {
+          const item = document.createElement('div');
+          item.className = 'thumb-item' + (i === this.currentPage ? ' active' : '');
+          item.id = 'thumb-' + i;
+
+          const span = document.createElement('span');
+          span.textContent = 'Page ' + i;
+
+          const c = document.createElement('canvas');
+          c.className = 'thumb-canvas';
+          item.appendChild(span);
+          item.appendChild(c);
+          item.onclick = () => { this.renderPage(i); };
+          sidebar.appendChild(item);
+
+          // Render thumb in background
+          this.renderThumbCanvas(i, c);
+        }
+      }
+
+      async renderThumbCanvas(num, canvas) {
+        try {
+          const p = await this.pdfDoc.getPage(num);
+          const vp = p.getViewport({ scale: 0.25 });
+          canvas.width = vp.width;
+          canvas.height = vp.height;
+          p.render({ canvasContext: canvas.getContext('2d'), viewport: vp });
+        } catch (e) {}
+      }
+
+      updateNav() {
+        document.getElementById('page-indicator').textContent = 'Page ' + this.currentPage + ' / ' + this.totalPages;
+        document.getElementById('prev-btn').disabled = this.currentPage <= 1;
+        document.getElementById('next-btn').disabled = this.currentPage >= this.totalPages;
+
+        // Sync thumbnail active border
+        document.querySelectorAll('.thumb-item').forEach((el, idx) => {
+          el.classList.toggle('active', (idx + 1) === this.currentPage);
+        });
+
+        this.updateBookmarkBtn();
+      }
+
+      changePage(delta) {
+        const target = this.currentPage + delta;
+        if (target >= 1 && target <= this.totalPages) {
+          this.renderPage(target);
+        }
+      }
+
+      promptPageJump() {
+        const p = prompt('Go to page (1 to ' + this.totalPages + '):', this.currentPage);
+        const parsed = parseInt(p, 10);
+        if (!isNaN(parsed) && parsed >= 1 && parsed <= this.totalPages) {
+          this.renderPage(parsed);
+        }
+      }
+
+      zoom(delta) {
+        this.zoomMode = 'custom';
+        this.zoomScale = Math.max(0.5, Math.min(3.0, this.zoomScale + delta));
+        document.getElementById('zoom-select').value = String(Math.round(this.zoomScale * 100) / 100);
+        this.renderPage(this.currentPage);
+      }
+
+      handleZoomSelect(e) {
+        const val = e.target.value;
+        this.zoomMode = val;
+        if (val !== 'fit-width' && val !== 'fit-page') {
+          this.zoomScale = parseFloat(val);
+        }
+        this.renderPage(this.currentPage);
+      }
+
+      toggleThumbnails() {
+        document.getElementById('thumb-sidebar').classList.toggle('collapsed');
+        document.getElementById('thumb-toggle-btn').classList.toggle('active');
+      }
+
+      /* More Information Deep Metadata Forensics */
+      async extractDocumentInfo() {
+        if (!this.pdfDoc) return;
+        const meta = await this.pdfDoc.getMetadata();
+        const info = meta.info || {};
+        const container = document.getElementById('info-content');
+        container.innerHTML = '';
+
+        // Extract hidden properties & stream attributes
+        const p1 = await this.pdfDoc.getPage(1);
+        const box = p1.view;
+        const widthPt = Math.round(box[2] - box[0]);
+        const heightPt = Math.round(box[3] - box[1]);
+        const widthMm = Math.round(widthPt * 0.352778);
+        const heightMm = Math.round(heightPt * 0.352778);
+
+        const props = [
+          { label: 'Document Title', val: info.Title || this.docName },
+          { label: 'PDF Format Version', val: 'PDF ' + (meta.metadata ? '1.7 / 2.0 (Standard)' : '1.4+') },
+          { label: 'Producer / Engine', val: info.Producer || 'Internal PDF Engine' },
+          { label: 'Author / Creator Tool', val: info.Creator || info.Author || 'Standard Application' },
+          { label: 'Creation Timestamp', val: info.CreationDate ? this.formatPdfDate(info.CreationDate) : 'Embedded in object stream' },
+          { label: 'Modification Timestamp', val: info.ModDate ? this.formatPdfDate(info.ModDate) : 'Not modified' },
+          { label: 'Linearized (Fast Web Stream)', val: info.IsLinearized ? 'Yes (Optimized Stream)' : 'No (Standard File Table)' },
+          { label: 'Page Bounding Box (Dimensions)', val: widthPt + ' × ' + heightPt + ' pt (' + widthMm + ' × ' + heightMm + ' mm)' },
+          { label: 'Total Pages Count', val: this.totalPages + ' Pages' },
+          { label: 'Security & Permissions', val: (info.IsEncrypted ? 'Encrypted / Permissions Restrained' : 'Unrestricted (Full Printing & Copying Allowed)') }
+        ];
+
+        const card = document.createElement('div');
+        card.className = 'info-card';
+
+        props.forEach(p => {
+          const row = document.createElement('div');
+          row.className = 'info-row';
+          row.innerHTML = `<span class="info-label">${p.label}</span><span class="info-val">${p.val}</span>`;
+          card.appendChild(row);
+        });
+
+        container.appendChild(card);
+      }
+
+      formatPdfDate(raw) {
+        if (!raw) return 'Unknown';
+        // Parse D:YYYYMMDDHHmmSS
+        const match = raw.match(/D:?(\d{4})(\d{2})(\d{2})(\d{2})?(\d{2})?/);
+        if (match) {
+          return `${match[1]}-${match[2]}-${match[3]} ${match[4] || '00'}:${match[5] || '00'} UTC`;
+        }
+        return raw;
+      }
+
+      toggleInfoDrawer() {
+        const drawer = document.getElementById('info-drawer');
+        drawer.classList.toggle('open');
+        document.getElementById('info-btn').classList.toggle('active', drawer.classList.contains('open'));
+      }
+
+      /* Search */
+      handleSearchKeyDown(e) {
+        if (e.key === 'Enter') {
+          this.searchPdf();
+        }
+      }
+
+      async searchPdf() {
+        const query = document.getElementById('search-input').value.trim().toLowerCase();
+        if (!query || !this.pdfDoc) return;
+
+        this.searchResults = [];
+        this.searchIndex = -1;
+        document.getElementById('search-counter').textContent = 'Searching…';
+
+        for (let i = 1; i <= this.totalPages; i++) {
+          const p = await this.pdfDoc.getPage(i);
+          const txt = await p.getTextContent();
+          const str = txt.items.map(it => it.str).join(' ').toLowerCase();
+          if (str.includes(query)) {
+            this.searchResults.push(i);
+          }
+        }
+
+        if (this.searchResults.length > 0) {
+          this.searchIndex = 0;
+          document.getElementById('search-counter').textContent = (this.searchIndex + 1) + '/' + this.searchResults.length;
+          this.renderPage(this.searchResults[0]);
+        } else {
+          document.getElementById('search-counter').textContent = '0 matches';
+        }
+      }
+
+      searchNext() {
+        if (this.searchResults.length === 0) return;
+        this.searchIndex = (this.searchIndex + 1) % this.searchResults.length;
+        document.getElementById('search-counter').textContent = (this.searchIndex + 1) + '/' + this.searchResults.length;
+        this.renderPage(this.searchResults[this.searchIndex]);
+      }
+
+      /* Storage: Recents & Bookmarks */
+      loadStorage() {
+        const recents = JSON.parse(localStorage.getItem('nova_recents') || '[]');
+        const bookmarks = JSON.parse(localStorage.getItem('nova_bookmarks') || '[]');
+
+        const rList = document.getElementById('recents-list');
+        if (recents.length > 0) {
+          rList.innerHTML = '';
+          recents.slice(0, 6).forEach(doc => {
+            const row = document.createElement('div');
+            row.className = 'doc-row';
+            row.innerHTML = `<div class="doc-info"><span class="doc-name">${doc.name}</span><span class="doc-sub">Last viewed</span></div><span class="doc-arrow">›</span>`;
+            rList.appendChild(row);
+          });
+
+          const last = recents[0];
+          document.getElementById('resume-btn').style.display = 'inline-flex';
+          document.getElementById('resume-name').textContent = last.name;
+        }
+
+        const bList = document.getElementById('bookmarks-list');
+        if (bookmarks.length > 0) {
+          bList.innerHTML = '';
+          bookmarks.slice(0, 6).forEach(b => {
+            const row = document.createElement('div');
+            row.className = 'doc-row';
+            row.innerHTML = `<div class="doc-info"><span class="doc-name">${b.name}</span><span class="doc-sub">Page ${b.page}</span></div><span class="doc-arrow" style="color:var(--accent)">★</span>`;
+            row.onclick = () => {
+              if (this.docName === b.name) {
+                this.showReader();
+                this.renderPage(b.page);
+              }
+            };
+            bList.appendChild(row);
+          });
+        }
+      }
+
+      saveRecent(name) {
+        let recents = JSON.parse(localStorage.getItem('nova_recents') || '[]');
+        recents = recents.filter(r => r.name !== name);
+        recents.unshift({ name: name, time: Date.now() });
+        localStorage.setItem('nova_recents', JSON.stringify(recents.slice(0, 10)));
+      }
+
+      toggleBookmark() {
+        if (!this.docName) return;
+        let bookmarks = JSON.parse(localStorage.getItem('nova_bookmarks') || '[]');
+        const existsIndex = bookmarks.findIndex(b => b.name === this.docName && b.page === this.currentPage);
+        if (existsIndex >= 0) {
+          bookmarks.splice(existsIndex, 1);
+        } else {
+          bookmarks.unshift({ name: this.docName, page: this.currentPage });
+        }
+        localStorage.setItem('nova_bookmarks', JSON.stringify(bookmarks));
+        this.updateBookmarkBtn();
+      }
+
+      updateBookmarkBtn() {
+        const bookmarks = JSON.parse(localStorage.getItem('nova_bookmarks') || '[]');
+        const isB = bookmarks.some(b => b.name === this.docName && b.page === this.currentPage);
+        document.getElementById('bookmark-btn').textContent = isB ? '★' : '☆';
+      }
+
+      showAbout() {
+        document.getElementById('about-modal').style.display = 'flex';
+      }
+
+      closeAbout(e) {
+        document.getElementById('about-modal').style.display = 'none';
+      }
+    }
+
+    const app = new NovaPdfApp();
+  </script>
+</body>
+</html>

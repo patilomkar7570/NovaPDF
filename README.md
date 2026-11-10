@@ -55,21 +55,52 @@ All processing occurs entirely on your device. The application does not request 
 
 ---
 
-## Installation
+## NOVA PDF+ — PC Edition (Browser App)
 
-### Download Signed Release APK
+**NOVA PDF+** is the companion desktop edition of NOVA PDF designed for PC users. It runs entirely inside any modern web browser (Edge, Chrome, Firefox, Safari, Brave) as a lightweight, single-file application (`NovaPDF-Plus.html`) with zero installation or setup required.
 
-You can download the official signed release APK directly from the [GitHub Releases](https://github.com/patilomkar7570/NovaPDF/releases) page or workflow artifacts:
+It faithfully replicates the clean, distraction-free aesthetic of the mobile application while bringing powerful desktop-class inspection and OCR capabilities:
 
-- **Artifact Name:** `NOVA-PDF-Android-v1.0.apk`
+### 🌟 Exclusive Features for PC
+- **🔤 Smart Text (OCR Engine):** Convert image-based, photographed, and scanned PDFs into clickable, selectable, and copyable text layers on demand. Perfect for scanned books, receipts, and photographed documents.
+- **ℹ️ Deep Document Inspector ("More Information"):** Uncover technical document properties and hidden structural attributes not exposed by standard Windows File Explorer or common PDF viewers:
+  - Exact bounding box dimensions in typographic points (`pt`) and millimeters (`mm`)
+  - PDF specification version (1.4 through 2.0)
+  - Linearization status (fast web stream vs. standard object table)
+  - PDF producer, creation application, and author toolchains
+  - High-precision UTC creation and modification timestamps
+  - Encryption and document rights / copy restrictions
+  - Document title and total page count
+- **📑 Adaptive Reading Workspace:** Resizable thumbnail sidebar, zoom presets (Fit Width, Fit Page, 75%–200%), in-page text search, reading history, and local bookmarks.
+- **🔒 100% Offline & Private:** Zero document data or images are ever uploaded. All rendering and OCR run client-side in your browser via WebAssembly and HTML5 Canvas.
 
-### Installation Steps
+### How to Use NOVA PDF+ on PC
+1. **Direct HTML File:** Download `NovaPDF-Plus.html` from the [GitHub Releases](https://github.com/patilomkar7570/NovaPDF/releases) or repository root. Double-click the file to open it in your preferred web browser.
+2. **GitHub Pages (Web):** You can also run it instantly online via GitHub Pages without downloading.
 
+---
+
+## Installation & Downloads
+
+### 📱 Android Phone & Tablet (APK)
+
+Download the official signed release APK directly from the [GitHub Releases](https://github.com/patilomkar7570/NovaPDF/releases) page:
+
+- **File Name:** `NOVA-PDF-Android-v1.0.apk`
+- **Version:** `1.0` (Release `1.0.0`)
+
+#### Android Installation Steps:
 1. Transfer or download `NOVA-PDF-Android-v1.0.apk` to your Android device.
 2. Open your device's file manager or browser downloads and tap the APK.
 3. If prompted, allow "Install unknown apps" from your file manager or browser.
 4. Tap **Install** (or **Update**).
-5. All your existing recent documents, bookmarks, and preferences from previous versions are automatically preserved!
+5. All your existing recent documents, bookmarks, and preferences are automatically preserved!
+
+### 💻 PC Desktop Edition (Standalone HTML)
+
+- **File Name:** `NovaPDF-Plus.html`
+- **Supported Browsers:** Google Chrome, Microsoft Edge, Mozilla Firefox, Apple Safari, Brave, Opera.
+- Simply open the `.html` file in your browser, drag and drop any PDF, and start reading!
 
 ---
 
