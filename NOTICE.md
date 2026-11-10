@@ -1,12 +1,20 @@
 NOVA PDF
 Copyright (c) 2026 patilomkar7570
 
-NOVA PDF is a private, local-first document reading application for Android phone and tablet devices.
+NOVA PDF is a private, local-first document reading application for Android devices and PC web browsers.
 
 Third-Party Licenses and Dependencies:
 
 1. Android Edition:
    - PDFBox-Android, version 2.0.27.0
+     Licensed under the Apache License, Version 2.0
+     https://www.apache.org/licenses/LICENSE-2.0
+
+2. PC Edition (NOVA PDF+):
+   - PDF.js (Mozilla), version 3.11.174
+     Licensed under the Apache License, Version 2.0
+     https://www.apache.org/licenses/LICENSE-2.0
+   - Tesseract.js, version 5
      Licensed under the Apache License, Version 2.0
      https://www.apache.org/licenses/LICENSE-2.0
 
