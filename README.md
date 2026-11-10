@@ -59,7 +59,7 @@ All processing occurs entirely on your device. The application does not request 
 
 ### Download Signed Release APK
 
-You can download the official signed release APK directly from the [GitHub Releases](https://github.com/patilomkar7570/StillPDF/releases) page or workflow artifacts:
+You can download the official signed release APK directly from the [GitHub Releases](https://github.com/patilomkar7570/NovaPDF/releases) page or workflow artifacts:
 
 - **Artifact Name:** `NOVA-PDF-Android-v1.1.0.apk`
 
