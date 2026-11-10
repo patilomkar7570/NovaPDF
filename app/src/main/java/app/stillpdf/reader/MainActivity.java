@@ -537,9 +537,12 @@ public class MainActivity extends Activity {
                 if (index >= 0) result = cursor.getString(index);
             }
         } catch (Exception ignored) { }
-        if (result == null || result.trim().isEmpty()) {
+        if (result != null) {
+            result = result.replaceAll("[\\r\\n\\t]+", " ").trim();
+        }
+        if (result == null || result.isEmpty()) {
             String last = uri.getLastPathSegment();
-            result = (last == null || last.trim().isEmpty()) ? "Document.pdf" : last;
+            result = (last == null || last.trim().isEmpty()) ? "Document.pdf" : last.replaceAll("[\\r\\n\\t]+", " ").trim();
         }
         return result;
     }
@@ -606,6 +609,20 @@ public class MainActivity extends Activity {
     private File copyIntoCache(Uri uri) throws IOException {
         File folder = new File(getCacheDir(), "pdf_documents");
         if (!folder.exists() && !folder.mkdirs()) throw new IOException("Unable to create PDF cache directory.");
+
+        // Housekeeping: automatically prune older cached PDFs if cache exceeds 15 files
+        File[] cachedFiles = folder.listFiles();
+        if (cachedFiles != null && cachedFiles.length > 15) {
+            java.util.Arrays.sort(cachedFiles, (f1, f2) -> Long.compare(f1.lastModified(), f2.lastModified()));
+            int toDelete = cachedFiles.length - 12;
+            for (File f : cachedFiles) {
+                if (toDelete <= 0) break;
+                if (currentFile == null || !f.equals(currentFile)) {
+                    if (f.delete()) toDelete--;
+                }
+            }
+        }
+
         String key = md5(uri.toString());
         File target = new File(folder, key + ".pdf");
         File temp = new File(folder, key + ".part");
@@ -907,7 +924,7 @@ public class MainActivity extends Activity {
                         bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
                         bm.eraseColor(Color.WHITE);
                         page.render(bm, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-                    } catch (Exception ignored) { }
+                    } catch (Throwable ignored) { }
 
                     final int pageIdx = i;
                     final Bitmap finalBm = bm;
@@ -985,13 +1002,30 @@ public class MainActivity extends Activity {
             targetWidth = Math.min(3600, Math.max(dp(280), targetWidth));
             int targetHeight = Math.max(1, Math.round(targetWidth * ratio));
 
-            nextBitmap = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888);
+            // Guard against extreme dimensions or memory spikes on tall documents/drawings
+            int maxDimension = 4096;
+            if (targetHeight > maxDimension) {
+                targetHeight = maxDimension;
+                targetWidth = Math.max(1, Math.round(targetHeight / ratio));
+            }
+            if ((long) targetWidth * targetHeight > 12_000_000L) {
+                float factor = (float) Math.sqrt(12_000_000.0 / ((double) targetWidth * targetHeight));
+                targetWidth = Math.max(1, Math.round(targetWidth * factor));
+                targetHeight = Math.max(1, Math.round(targetHeight * factor));
+            }
+
+            try {
+                nextBitmap = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888);
+            } catch (Throwable oom) {
+                // Fallback to half resolution / RGB_565 (50% memory) on constrained devices
+                nextBitmap = Bitmap.createBitmap(Math.max(1, targetWidth / 2), Math.max(1, targetHeight / 2), Bitmap.Config.RGB_565);
+            }
             nextBitmap.eraseColor(Color.WHITE);
             page.render(nextBitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
             if (displayedBitmap != null && !displayedBitmap.isRecycled()) displayedBitmap.recycle();
             displayedBitmap = nextBitmap;
             if (pageImage != null) pageImage.setImageBitmap(displayedBitmap);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             if (nextBitmap != null && !nextBitmap.isRecycled()) nextBitmap.recycle();
             showToast("Could not render page " + (pageIndex + 1) + ".");
         }
@@ -1231,7 +1265,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         closeRenderer();
-        ioExecutor.shutdown();
+        ioExecutor.shutdownNow();
         super.onDestroy();
     }
 }
