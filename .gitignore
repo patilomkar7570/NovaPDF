@@ -1,0 +1,28 @@
+# Gradle and Android
+.gradle/
+build/
+app/build/
+*.apk
+*.aab
+local.properties
+.idea/
+*.iml
+captures/
+.externalNativeBuild
+.cxx
+
+# Keystores and secrets
+*.jks
+*.keystore
+missing-release-key.jks
+
+# Desktop Node / Electron
+desktop/node_modules/
+desktop/dist/
+desktop/dist-electron/
+desktop/release/
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db

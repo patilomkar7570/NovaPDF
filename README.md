@@ -1,77 +1,223 @@
-# StillPDF — private, ad-free PDF reader
+# NOVA PDF — Private, Offline Document Reader Ecosystem
 
-StillPDF is a lightweight Android PDF reader designed around privacy and offline use. It has no advertisements, analytics, account system, internet permission, or tracking SDK.
+<p align="center">
+  <img src="assets/branding/nova-logo-black.png" alt="NOVA PDF Logo" width="128" height="128" />
+</p>
 
-**By NOVA** · An independent app in the NOVA ecosystem.
+<p align="center">
+  <strong>A modern, privacy-first PDF reader ecosystem for Android and Windows Desktop.</strong><br>
+  No advertisements. No analytics. No account requirements. 100% offline and local.
+</p>
 
-## Features
+---
 
-- Open PDF files using Android's system document picker.
-- Render PDF pages offline using Android `PdfRenderer`.
-- Search for words and phrases in selectable PDF text using PDFBox-Android.
-- Save and remove page bookmarks.
-- Remember the last page for each document.
-- View recently opened documents and saved bookmarks.
-- Switch between light and dark themes.
-- Open or share PDF files from other apps.
+## Overview
 
-## Privacy
+**NOVA PDF** is an independent, distraction-free document reading application available across two dedicated platforms:
 
-- No ads, accounts, analytics, or tracking.
-- No Internet permission is requested.
-- Documents are processed locally on your device.
-- App preferences and cached document copies are stored in private app storage.
-- Uninstalling the app removes its private local data and cache.
+1. **NOVA PDF Android** — Native Android application designed for phones, foldables, and tablets, featuring responsive multi-column layouts, page thumbnail navigation, and offline text search.
+2. **NOVA PDF Desktop** — Native Windows desktop application featuring fast PDF.js rendering, page thumbnails, bookmarks, document history, text search, print support, and full keyboard navigation.
 
-## Known limitations
+Both editions share a unified visual identity, minimal aesthetic, and a strict local-first privacy standard: your files never leave your device.
 
-- Search works only with text embedded in the PDF. Scanned or image-only PDFs require OCR; OCR is not included.
-- Password-protected, damaged, or unusual PDFs may fail to open.
+---
 
-## Download
+## Key Features
 
-The latest public release is **StillPDF v1.0.0**.
+| Capability | NOVA PDF Android | NOVA PDF Windows Desktop |
+| :--- | :--- | :--- |
+| **Engine** | Native Android `PdfRenderer` + PDFBox-Android | PDF.js + Electron + React + TypeScript |
+| **Layouts** | Adaptive: Compact (<600dp), Medium (600–839dp), Expanded (840dp+) | Professional desktop window, resizable, collapsible sidebar |
+| **Document Navigation** | Page switcher, direct page jump dialog, thumbnail rail | Prev/Next, direct page input, multi-page thumbnail sidebar |
+| **Text Search** | In-document text extraction with match jumping | Real-time text search with occurrence counter and match stepping |
+| **Bookmarks** | Per-document bookmark management | Instant bookmarking, persistent sidebar list, quick jump |
+| **Reading State** | Automatically remembers last page read per document | Remembers last document and page position per document |
+| **Themes** | High-contrast Light and Dark modes | High-contrast Light and Dark modes with instant toggle |
+| **Display Zoom** | Multi-level zoom controls with reset & fit | Preset zoom levels, Fit to Width, Fit to Page, manual zoom |
+| **Print Support** | System document intent integration | Native Windows print dialog integration (`Ctrl + P`) |
+| **File Opening** | System document picker & Android Share Intent | Native Windows file picker (`Ctrl + O`) & Drag and Drop |
+| **Privacy & Offline** | 0 trackers, 0 ads, 0 analytics, no internet permission | 100% offline, local persistence, isolated Electron sandbox |
 
-- [Download StillPDF v1.0.0 APK](https://github.com/patilomkar7570/StillPDF/releases/download/v1.0.0/Still.PDF.apk)
-- [View all releases](https://github.com/patilomkar7570/StillPDF/releases)
+---
 
-Download the APK to your Android device and install it. Android may ask you to allow installation from the browser or file manager you used. Only install APKs from sources you trust.
+## UI & Screenshots
 
-**Minimum Android version:** Android 6.0 (API 23).
+```
++-------------------------------------------------------------------------------+
+|  NOVA PDF Desktop                                          [ - ] [ # ] [ X ]  |
++-------------------------------------------------------------------------------+
+| [NOVA] Open PDF (Ctrl+O) | [<<] Page [ 12 ] / 45 [>>] | Zoom [100% v] | [Search] [★] |
++------------------+------------------------------------------------------------+
+| Thumbnails       |                                                            |
+| +--------------+ |                       DOCUMENT CANVAS                      |
+| |    Page 1    | |                                                            |
+| +--------------+ |                                                            |
+| +--------------+ |                                                            |
+| |  [Page 12]   | |                                                            |
+| +--------------+ |                                                            |
+| +--------------+ |                                                            |
+| |    Page 13   | |                                                            |
+| +--------------+ |                                                            |
++------------------+------------------------------------------------------------+
+```
 
-## Build an APK in Android Studio
+---
 
-1. Install Android Studio and a compatible Android SDK.
-2. Open the `StillPDF` project folder in Android Studio.
-3. Allow Gradle sync to finish. If prompted, install Android SDK Platform 35 and Java 17.
-4. Choose **Build → Build Bundle(s) / APK(s) → Build APK(s)**.
-5. Android Studio will provide the debug APK. The expected output path is:
+## Current Versions & Compatibility
 
-   `app/build/outputs/apk/debug/app-debug.apk`
+- **NOVA PDF Android:** `v1.1.0` (versionCode: `2`)
+  - Application ID: `app.stillpdf.reader` *(preserved for seamless upgrade compatibility)*
+  - Minimum Android Version: Android 6.0 (API 23)
+  - Target SDK: Android 14 (API 34)
+  - Compile SDK: Android 15 (API 35)
+  - Java Version: Java 17
+- **NOVA PDF Desktop:** `v1.0.0`
+  - Platform: Windows 10 / Windows 11 (x64)
+  - Distribution: Windows Installer (`NOVA-PDF-Windows-Setup-v1.0.0.exe`)
 
-The debug APK is intended for development and testing. It is not the signed public release APK.
+---
 
-## Build using GitHub Actions
+## Downloads
 
-The workflow at `.github/workflows/build-apk.yml` builds a **signed release APK** when code is pushed to the `main` or `master` branch, or when the workflow is started manually from the repository's **Actions** tab.
+### 📱 Android Installation
 
-After a successful run:
+Download the official signed release APK:
+- [Download NOVA PDF Android v1.1.0 APK](https://github.com/patilomkar7570/StillPDF/releases) *(Artifact name: `NOVA-PDF-Android-v1.1.0.apk`)*
 
-1. Open the completed **Build StillPDF APK** workflow run.
-2. Find the `StillPDF-signed-release-apk` artifact.
-3. Download the artifact ZIP and extract `app-release.apk`.
+**Installation steps:**
+1. Download the `.apk` file to your Android phone or tablet.
+2. Tap the downloaded file. When prompted, allow installing applications from your browser or file manager.
+3. Tap **Install**. If updating from v1.0.0, your recent documents, bookmarks, and preferences will be preserved automatically.
 
-The workflow uses GitHub Actions repository secrets for the Android release-signing keystore and passwords. These signing credentials must be configured by the repository maintainer. Workflow artifacts are retained for 30 days.
+### 💻 Windows Desktop Installation
 
-## Technical details
+Download the official Windows installer:
+- [Download NOVA PDF Windows Setup v1.0.0](https://github.com/patilomkar7570/StillPDF/releases) *(Artifact name: `NOVA-PDF-Windows-Setup-v1.0.0.exe`)*
 
-- Package: `app.stillpdf.reader`
-- Current version: `1.0.0`
-- Minimum Android version: Android 6.0 (API 23)
-- Compile SDK: 35
-- Target SDK: 34
-- Java: 17
-- PDF rendering: Android `PdfRenderer`
-- Text extraction and search: PDFBox-Android `2.0.27.0`
+**Installation steps:**
+1. Download `NOVA-PDF-Windows-Setup-v1.0.0.exe`.
+2. Double-click the installer and choose your preferred installation directory.
+3. Launch NOVA PDF from your Desktop or Start Menu.
 
-StillPDF is an offline-first project. It does not request Internet access.
+---
+
+## Keyboard Shortcuts (Desktop)
+
+| Shortcut | Action |
+| :--- | :--- |
+| **Ctrl + O** | Open PDF via native Windows file dialog |
+| **Ctrl + F** | Open or toggle the text search bar |
+| **Ctrl + P** | Open native Windows print dialog |
+| **Ctrl + B** | Toggle collapsible sidebar (Thumbnails / Bookmarks / Recents) |
+| **Ctrl + +** / **Ctrl + =** | Zoom in (+25%) |
+| **Ctrl + -** | Zoom out (-25%) |
+| **Ctrl + 0** | Reset zoom to 100% |
+| **PageDown** / **Right Arrow** / **Space** | Next page |
+| **PageUp** / **Left Arrow** | Previous page |
+| **Home** | First page |
+| **End** | Last page |
+| **Escape** | Dismiss search bar or active dialog |
+
+---
+
+## Building from Source
+
+### 1. Android Application (`app/`)
+
+**Prerequisites:**
+- JDK 17
+- Android SDK Platform 35 & Build-Tools 35.0.0
+- Gradle 8.9+
+
+**Build commands:**
+
+```bash
+# Clone the repository
+git clone https://github.com/patilomkar7570/StillPDF.git
+cd StillPDF
+
+# Build Debug APK
+gradle assembleDebug
+
+# Output APK location:
+# app/build/outputs/apk/debug/app-debug.apk
+
+# Build Release APK (requires signing environment variables)
+export ANDROID_KEYSTORE_FILE="/path/to/keystore.jks"
+export ANDROID_KEYSTORE_PASSWORD="your-keystore-password"
+export ANDROID_KEY_ALIAS="stillpdf"
+export ANDROID_KEY_PASSWORD="your-key-password"
+
+gradle assembleRelease
+
+# Output APK location:
+# app/build/outputs/apk/release/app-release.apk
+```
+
+### 2. Windows Desktop Application (`desktop/`)
+
+**Prerequisites:**
+- Node.js LTS (v20+ or v22+)
+- npm 10+
+- Windows 10/11 x64 build environment
+
+**Build commands:**
+
+```bash
+# Navigate to the desktop directory
+cd desktop
+
+# Install dependencies
+npm ci
+
+# Run development server with live reload
+npm run dev
+
+# Build production assets (Vite React + Electron TypeScript)
+npm run build
+
+# Package Windows NSIS x64 Installer
+npm run dist
+
+# Output installer location:
+# desktop/release/NOVA-PDF-Windows-Setup-v1.0.0.exe
+```
+
+---
+
+## GitHub Actions CI/CD Automation
+
+This repository includes automated GitHub Actions workflows:
+
+### Android Release Workflow (`.github/workflows/build-apk.yml`)
+- Triggers on manual dispatch (`workflow_dispatch`) and pushes to `main`, `master`, and `feature/**`.
+- Compiles with Java 17, Android SDK 35, and Gradle 8.9.
+- Decodes the release keystore using repository secret `ANDROID_KEYSTORE_BASE64`.
+- Signs the APK using `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and `ANDROID_KEY_PASSWORD`.
+- Verifies APK signature with `apksigner` and `keytool`.
+- Uploads the signed APK artifact as `NOVA-PDF-Android-v1.1.0.apk`.
+
+### Windows Desktop Workflow (`.github/workflows/build-desktop.yml`)
+- Triggers on manual dispatch (`workflow_dispatch`) and pushes with changes in `desktop/**`.
+- Runs on `windows-latest` with Node.js LTS.
+- Builds the React front-end and Electron TypeScript back-end.
+- Packages the standalone installer using `electron-builder`.
+- Uploads the Windows installer artifact as `NOVA-PDF-Windows-Setup-v1.0.0.exe`.
+
+---
+
+## Privacy Policy & Architecture
+
+NOVA PDF is designed from the ground up as a private, offline tool:
+
+- **Zero Cloud Dependence:** PDF parsing, rendering, text stripping, and page searching are performed entirely on the local CPU/GPU.
+- **Zero Telemetry:** No tracking libraries, analytics SDKs, error reporting beacons, or advertisement networks are present in either project.
+- **No Internet Permissions:** The Android app requests neither `android.permission.INTERNET` nor `ACCESS_NETWORK_STATE`.
+- **Local Persistence:** Reading position, bookmarks, and UI preferences are stored in private local app storage (`SharedPreferences` on Android, local JSON in user data on Windows).
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+Third-party component notices and licenses are documented in [NOTICE.md](NOTICE.md).
