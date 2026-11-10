@@ -1,9 +1,12 @@
 package app.stillpdf.reader;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -14,12 +17,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
+import android.text.InputType;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import android.content.Context;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -38,8 +42,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -47,12 +51,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * StillPDF: a local-first PDF reader. It has no ads, analytics, account system,
- * or network permissions. PDF pages are rendered by Android's PdfRenderer;
- * selectable-text search is powered by PDFBox-Android.
+ * NOVA PDF: A private, local-first PDF reader for phone, foldable, and tablet devices.
+ * No ads, analytics, accounts, or network permissions.
+ * Local rendering powered by Android PdfRenderer; text search powered by PDFBox-Android.
  */
 public class MainActivity extends Activity {
     private static final int PICK_PDF_REQUEST = 4107;
+    // Preserved for compatibility with previous releases
     private static final String PREFS = "stillpdf_preferences";
     private static final String KEY_DARK = "dark_mode";
     private static final String KEY_RECENTS = "recent_documents";
@@ -73,12 +78,21 @@ public class MainActivity extends Activity {
     private int currentPage = 0;
     private int pageCount = 0;
 
-    private LinearLayout root;
+    private float zoomScale = 1.0f;
+    private boolean showThumbnailsPanel = true;
+    private int thumbRequestId = 0;
+
+    private ViewGroup root;
     private ImageView pageImage;
     private TextView pageCounter;
     private TextView bookmarkButton;
+    private TextView zoomIndicator;
+    private Button prevButton;
+    private Button nextButton;
     private EditText searchInput;
     private Button nextSearchButton;
+    private LinearLayout thumbnailContainer;
+    private ScrollView thumbnailScroll;
     private final ArrayList<Integer> searchPages = new ArrayList<>();
     private int searchResultIndex = -1;
     private Bitmap displayedBitmap;
@@ -91,12 +105,49 @@ public class MainActivity extends Activity {
         darkMode = prefs.getBoolean(KEY_DARK, false);
         PDFBoxResourceLoader.init(getApplicationContext());
         applySystemBars();
-        buildHome();
 
-        Uri incoming = getIncomingUri(getIntent());
-        if (incoming != null) {
-            String name = nameFromUri(incoming);
-            openPdf(incoming, name, 0);
+        if (savedInstanceState != null) {
+            reading = savedInstanceState.getBoolean("reading", false);
+            currentPage = savedInstanceState.getInt("currentPage", 0);
+            zoomScale = savedInstanceState.getFloat("zoomScale", 1.0f);
+            showThumbnailsPanel = savedInstanceState.getBoolean("showThumbnailsPanel", true);
+            String savedUriStr = savedInstanceState.getString("currentUri");
+            if (savedUriStr != null) currentUri = Uri.parse(savedUriStr);
+            currentName = savedInstanceState.getString("currentName", "Document.pdf");
+        }
+
+        if (reading && currentUri != null) {
+            openPdf(currentUri, currentName, currentPage);
+        } else {
+            buildHome();
+            Uri incoming = getIncomingUri(getIntent());
+            if (incoming != null) {
+                String name = nameFromUri(incoming);
+                openPdf(incoming, name, 0);
+            }
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("reading", reading);
+        outState.putInt("currentPage", currentPage);
+        outState.putFloat("zoomScale", zoomScale);
+        outState.putBoolean("showThumbnailsPanel", showThumbnailsPanel);
+        if (currentUri != null) outState.putString("currentUri", currentUri.toString());
+        outState.putString("currentName", currentName);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        applySystemBars();
+        if (reading) {
+            buildReader();
+            renderPage(currentPage);
+        } else {
+            buildHome();
         }
     }
 
@@ -120,6 +171,23 @@ public class MainActivity extends Activity {
         return null;
     }
 
+    private int getWidthDp() {
+        return getResources().getConfiguration().screenWidthDp;
+    }
+
+    private boolean isCompact() {
+        return getWidthDp() < 600;
+    }
+
+    private boolean isMedium() {
+        int w = getWidthDp();
+        return w >= 600 && w < 840;
+    }
+
+    private boolean isExpanded() {
+        return getWidthDp() >= 840;
+    }
+
     private void applySystemBars() {
         Window window = getWindow();
         int background = colorBackground();
@@ -135,12 +203,13 @@ public class MainActivity extends Activity {
         return Math.round(value * getResources().getDisplayMetrics().density);
     }
 
-    private int colorBackground() { return Color.parseColor(darkMode ? "#101216" : "#F4F6FA"); }
-    private int colorSurface() { return Color.parseColor(darkMode ? "#1A1E25" : "#FFFFFF"); }
-    private int colorText() { return Color.parseColor(darkMode ? "#F2F4F8" : "#172033"); }
-    private int colorMuted() { return Color.parseColor(darkMode ? "#A7AFBE" : "#667085"); }
-    private int colorAccent() { return Color.parseColor("#3867E8"); }
-    private int colorBorder() { return Color.parseColor(darkMode ? "#343B48" : "#E2E7F0"); }
+    private int colorBackground() { return Color.parseColor(darkMode ? "#0F1115" : "#F6F8FB"); }
+    private int colorSurface() { return Color.parseColor(darkMode ? "#181C23" : "#FFFFFF"); }
+    private int colorSurfaceSubtle() { return Color.parseColor(darkMode ? "#222731" : "#EEF2F6"); }
+    private int colorText() { return Color.parseColor(darkMode ? "#F2F5F9" : "#0F172A"); }
+    private int colorMuted() { return Color.parseColor(darkMode ? "#94A3B8" : "#64748B"); }
+    private int colorAccent() { return Color.parseColor("#3267E8"); }
+    private int colorBorder() { return Color.parseColor(darkMode ? "#2B3240" : "#E2E8F0"); }
 
     private GradientDrawable backgroundShape(int fill, int radiusDp, int strokeColor) {
         GradientDrawable drawable = new GradientDrawable();
@@ -163,12 +232,12 @@ public class MainActivity extends Activity {
     private Button makeButton(String label, boolean primary, Runnable action) {
         Button button = new Button(this);
         button.setText(label);
-        button.setTextAllCaps(false);
+        button.setAllCaps(false);
         button.setTextSize(14);
         button.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
         button.setPadding(dp(14), dp(8), dp(14), dp(8));
-        button.setMinHeight(dp(46));
-        button.setBackground(backgroundShape(primary ? colorAccent() : colorSurface(), 14,
+        button.setMinHeight(dp(44));
+        button.setBackground(backgroundShape(primary ? colorAccent() : colorSurface(), 12,
                 primary ? 0 : colorBorder()));
         button.setTextColor(primary ? Color.WHITE : colorText());
         button.setOnClickListener(v -> action.run());
@@ -192,147 +261,234 @@ public class MainActivity extends Activity {
         return new LinearLayout.LayoutParams(width < 0 ? width : dp(width), height < 0 ? height : dp(height));
     }
 
-    private void setPageMargins(View view, int left, int top, int right, int bottom) {
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
-        params.setMargins(dp(left), dp(top), dp(right), dp(bottom));
-        view.setLayoutParams(params);
+    private ImageView makeLogoView(int sizeDp) {
+        ImageView logoView = new ImageView(this);
+        int resId = getResources().getIdentifier(darkMode ? "ic_nova_logo_white" : "ic_nova_logo", "drawable", getPackageName());
+        if (resId != 0) {
+            logoView.setImageResource(resId);
+        } else {
+            logoView.setImageResource(getResources().getIdentifier("ic_launcher", "mipmap", getPackageName()));
+        }
+        logoView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        return logoView;
     }
 
     private void buildHome() {
         reading = false;
-        root = vertical();
-        root.setBackgroundColor(colorBackground());
-        root.setPadding(dp(20), dp(12), dp(20), dp(18));
+        boolean compact = isCompact();
+        int horizontalPadding = compact ? dp(16) : dp(32);
+        int verticalPadding = compact ? dp(12) : dp(24);
 
+        LinearLayout homeRoot = vertical();
+        homeRoot.setBackgroundColor(colorBackground());
+        homeRoot.setPadding(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding);
+
+        // Header bar with NOVA logo, title, and theme toggle
         LinearLayout header = horizontal();
+        ImageView logo = makeLogoView(compact ? 36 : 44);
+        header.addView(logo, lp(compact ? 36 : 44, compact ? 36 : 44));
+
         LinearLayout brand = vertical();
-        TextView title = text("StillPDF", 30, true, colorText());
-        TextView subtitle = text("Your documents. Your space.", 14, false, colorMuted());
-        brand.addView(title, lp(-1, 38));
-        brand.addView(subtitle, lp(-1, 26));
+        brand.setPadding(dp(12), 0, 0, 0);
+        TextView title = text("NOVA PDF", compact ? 24 : 30, true, colorText());
+        TextView subtitle = text("Private, local document reader", compact ? 13 : 14, false, colorMuted());
+        brand.addView(title, lp(-1, compact ? 30 : 36));
+        brand.addView(subtitle, lp(-1, compact ? 20 : 24));
         header.addView(brand, new LinearLayout.LayoutParams(0, -2, 1));
-        TextView theme = text(darkMode ? "☀" : "☾", 24, true, colorText());
+
+        TextView theme = text(darkMode ? "☀" : "☾", 22, true, colorText());
         theme.setGravity(Gravity.CENTER);
-        theme.setBackground(backgroundShape(colorSurface(), 16, colorBorder()));
-        header.addView(theme, lp(50, 50));
+        theme.setBackground(backgroundShape(colorSurface(), 14, colorBorder()));
+        header.addView(theme, lp(compact ? 44 : 48, compact ? 44 : 48));
         theme.setOnClickListener(v -> toggleTheme());
-        root.addView(header, lp(-1, -2));
+        homeRoot.addView(header, lp(-1, -2));
 
-        TextView privacy = text("OFFLINE  •  AD-FREE  •  PRIVATE", 11, true, colorAccent());
+        // Privacy indicator
+        TextView privacy = text("OFFLINE  •  NO ADS  •  PRIVATE & LOCAL", 11, true, colorAccent());
         privacy.setLetterSpacing(0.08f);
-        LinearLayout.LayoutParams privacyParams = lp(-1, 28);
+        LinearLayout.LayoutParams privacyParams = lp(-1, 26);
         privacyParams.topMargin = dp(8);
-        root.addView(privacy, privacyParams);
+        homeRoot.addView(privacy, privacyParams);
 
+        // Action Card (Open PDF & Continue Reading)
         LinearLayout actionCard = vertical();
         actionCard.setPadding(dp(16), dp(16), dp(16), dp(16));
-        actionCard.setBackground(backgroundShape(colorSurface(), 20, colorBorder()));
-        TextView actionTitle = text("A quieter place to read", 18, true, colorText());
-        TextView actionHint = text("Open a PDF stored on your phone. Your files stay on your device.", 13, false, colorMuted());
-        actionHint.setGravity(Gravity.TOP);
-        actionCard.addView(actionTitle, lp(-1, 30));
+        actionCard.setBackground(backgroundShape(colorSurface(), 16, colorBorder()));
+
+        TextView actionTitle = text("Open a document", compact ? 17 : 20, true, colorText());
+        TextView actionHint = text("Select a PDF from your device storage. Documents are processed locally.", 13, false, colorMuted());
+        actionCard.addView(actionTitle, lp(-1, -2));
         LinearLayout.LayoutParams hintParams = lp(-1, -2);
-        hintParams.topMargin = dp(2);
+        hintParams.topMargin = dp(4);
         actionCard.addView(actionHint, hintParams);
-        Button open = makeButton("＋   Open a PDF", true, this::launchPicker);
-        LinearLayout.LayoutParams openParams = lp(-1, 48);
-        openParams.topMargin = dp(16);
-        actionCard.addView(open, openParams);
+
+        LinearLayout buttonRow = compact ? vertical() : horizontal();
+        Button open = makeButton("＋  Open PDF", true, this::launchPicker);
+        if (compact) {
+            LinearLayout.LayoutParams openParams = lp(-1, 48);
+            openParams.topMargin = dp(14);
+            buttonRow.addView(open, openParams);
+        } else {
+            LinearLayout.LayoutParams openParams = lp(180, 48);
+            openParams.topMargin = dp(14);
+            buttonRow.addView(open, openParams);
+        }
+
         String lastUriValue = prefs.getString(KEY_LAST_URI, null);
         if (lastUriValue != null && !lastUriValue.isEmpty()) {
             String lastName = prefs.getString(KEY_LAST_NAME, "Last document");
-            Button resume = makeButton("Continue reading  ·  " + lastName, false, () -> {
+            Button resume = makeButton("Continue reading: " + lastName, false, () -> {
                 try {
                     Uri uri = Uri.parse(lastUriValue);
                     int page = prefs.getInt(pageKey(uri), 0);
                     openPdf(uri, nameFromStored(uri, lastName), page);
                 } catch (Exception e) {
-                    showToast("Could not reopen that PDF. Please choose it again.");
+                    showToast("Could not reopen that PDF. Please select it again.");
                 }
             });
-            LinearLayout.LayoutParams resumeParams = lp(-1, 48);
-            resumeParams.topMargin = dp(8);
-            actionCard.addView(resume, resumeParams);
+            if (compact) {
+                LinearLayout.LayoutParams resumeParams = lp(-1, 48);
+                resumeParams.topMargin = dp(8);
+                buttonRow.addView(resume, resumeParams);
+            } else {
+                LinearLayout.LayoutParams resumeParams = lp(300, 48);
+                resumeParams.topMargin = dp(14);
+                resumeParams.leftMargin = dp(12);
+                buttonRow.addView(resume, resumeParams);
+            }
         }
+        actionCard.addView(buttonRow, lp(-1, -2));
+
         LinearLayout.LayoutParams cardParams = lp(-1, -2);
-        cardParams.topMargin = dp(10);
-        root.addView(actionCard, cardParams);
+        cardParams.topMargin = dp(12);
+        homeRoot.addView(actionCard, cardParams);
 
-        ScrollView listScroll = new ScrollView(this);
-        listScroll.setFillViewport(false);
-        LinearLayout lists = vertical();
+        // Document sections: On compact, vertical stack; On medium/expanded tablets, side-by-side two columns
+        ScrollView scroll = new ScrollView(this);
+        scroll.setFillViewport(true);
 
-        TextView recentHeader = text("Recent", 19, true, colorText());
-        LinearLayout.LayoutParams sectionHeadParams = lp(-1, 38);
-        sectionHeadParams.topMargin = dp(12);
-        lists.addView(recentHeader, sectionHeadParams);
         ArrayList<JSONObject> recents = readJsonList(KEY_RECENTS);
-        if (recents.isEmpty()) {
-            lists.addView(text("Your recently opened PDFs will appear here.", 13, false, colorMuted()), lp(-1, 42));
-        } else {
-            for (JSONObject item : recents) {
-                String uriString = item.optString("uri", "");
-                String name = item.optString("name", "PDF document");
-                if (uriString.isEmpty()) continue;
-                addDocumentRow(lists, name, "PDF document  ·  Tap to continue", "›", () -> {
-                    Uri uri = Uri.parse(uriString);
-                    openPdf(uri, name, prefs.getInt(pageKey(uri), 0));
-                });
-            }
-        }
-
-        TextView bookmarksHeader = text("Bookmarks", 19, true, colorText());
-        LinearLayout.LayoutParams bookmarkHeaderParams = lp(-1, 38);
-        bookmarkHeaderParams.topMargin = dp(12);
-        lists.addView(bookmarksHeader, bookmarkHeaderParams);
         ArrayList<JSONObject> bookmarks = readJsonList(KEY_BOOKMARKS);
-        if (bookmarks.isEmpty()) {
-            lists.addView(text("Tap the bookmark icon while reading to save a page.", 13, false, colorMuted()), lp(-1, 42));
+
+        if (compact) {
+            LinearLayout lists = vertical();
+            buildSection(lists, "Recent Documents", recents, true);
+            buildSection(lists, "Bookmarks", bookmarks, false);
+
+            TextView footer = text("NOVA PDF  •  Offline & Private Document Reader", 12, false, colorMuted());
+            footer.setGravity(Gravity.CENTER);
+            footer.setOnClickListener(v -> showAboutDialog());
+            LinearLayout.LayoutParams footerParams = lp(-1, 44);
+            footerParams.topMargin = dp(16);
+            lists.addView(footer, footerParams);
+
+            scroll.addView(lists, new ScrollView.LayoutParams(-1, -2));
         } else {
-            for (JSONObject item : bookmarks) {
-                String uriString = item.optString("uri", "");
-                String name = item.optString("name", "PDF document");
-                int page = Math.max(0, item.optInt("page", 0));
-                if (uriString.isEmpty()) continue;
-                addDocumentRow(lists, name, "Bookmarked page  " + (page + 1), "↗", () -> {
-                    Uri uri = Uri.parse(uriString);
-                    openPdf(uri, name, page);
-                });
-            }
+            // Tablet / wide layout: Two-column layout
+            LinearLayout twoColumns = horizontal();
+            twoColumns.setGravity(Gravity.TOP);
+
+            LinearLayout leftCol = vertical();
+            buildSection(leftCol, "Recent Documents", recents, true);
+            twoColumns.addView(leftCol, new LinearLayout.LayoutParams(0, -2, 1.0f));
+
+            View spacer = new View(this);
+            twoColumns.addView(spacer, lp(18, 1));
+
+            LinearLayout rightCol = vertical();
+            buildSection(rightCol, "Bookmarks", bookmarks, false);
+            twoColumns.addView(rightCol, new LinearLayout.LayoutParams(0, -2, 1.0f));
+
+            LinearLayout wideContainer = vertical();
+            wideContainer.addView(twoColumns, lp(-1, -2));
+
+            TextView footer = text("NOVA PDF  •  Offline & Private Document Reader", 12, false, colorMuted());
+            footer.setGravity(Gravity.CENTER);
+            footer.setOnClickListener(v -> showAboutDialog());
+            LinearLayout.LayoutParams footerParams = lp(-1, 44);
+            footerParams.topMargin = dp(24);
+            wideContainer.addView(footer, footerParams);
+
+            scroll.addView(wideContainer, new ScrollView.LayoutParams(-1, -2));
         }
 
-        TextView footer = text("No ads. No accounts. No tracking.", 12, false, colorMuted());
-        footer.setGravity(Gravity.CENTER);
-        LinearLayout.LayoutParams footerParams = lp(-1, 48);
-        footerParams.topMargin = dp(12);
-        lists.addView(footer, footerParams);
+        LinearLayout.LayoutParams scrollParams = new LinearLayout.LayoutParams(-1, 0, 1.0f);
+        scrollParams.topMargin = dp(8);
+        homeRoot.addView(scroll, scrollParams);
 
-        listScroll.addView(lists);
-        LinearLayout.LayoutParams scrollParams = new LinearLayout.LayoutParams(-1, 0, 1);
-        scrollParams.topMargin = dp(2);
-        root.addView(listScroll, scrollParams);
+        root = homeRoot;
         setContentView(root);
         applySystemBars();
     }
 
+    private void showAboutDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("NOVA PDF")
+                .setMessage("Version 1.1.0\n\n"
+                        + "Licensed under the MIT License\n"
+                        + "Copyright \u00A9 2026 patilomkar7570\n\n"
+                        + "A private, distraction-free document reader for Android.\n"
+                        + "100% offline. No advertisements, tracking, or cloud uploads.\n\n"
+                        + "Third-party software:\n"
+                        + "\u2022 PDFBox-Android 2.0.27.0 (Apache License 2.0)")
+                .setPositiveButton("OK", null)
+                .show();
+    }
+
+    private void buildSection(LinearLayout container, String title, ArrayList<JSONObject> items, boolean isRecent) {
+        TextView header = text(title, 18, true, colorText());
+        LinearLayout.LayoutParams headerParams = lp(-1, 38);
+        headerParams.topMargin = dp(12);
+        container.addView(header, headerParams);
+
+        if (items.isEmpty()) {
+            String emptyMsg = isRecent ? "Your recently opened PDFs will appear here." : "Tap the bookmark icon while reading to save pages.";
+            TextView emptyView = text(emptyMsg, 13, false, colorMuted());
+            emptyView.setPadding(dp(12), dp(12), dp(12), dp(12));
+            emptyView.setBackground(backgroundShape(colorSurface(), 12, colorBorder()));
+            container.addView(emptyView, lp(-1, -2));
+        } else {
+            for (JSONObject item : items) {
+                String uriString = item.optString("uri", "");
+                String name = item.optString("name", "Document.pdf");
+                if (uriString.isEmpty()) continue;
+                if (isRecent) {
+                    addDocumentRow(container, name, "Tap to open", "›", () -> {
+                        Uri uri = Uri.parse(uriString);
+                        openPdf(uri, name, prefs.getInt(pageKey(uri), 0));
+                    });
+                } else {
+                    int page = Math.max(0, item.optInt("page", 0));
+                    addDocumentRow(container, name, "Page " + (page + 1), "★", () -> {
+                        Uri uri = Uri.parse(uriString);
+                        openPdf(uri, name, page);
+                    });
+                }
+            }
+        }
+    }
+
     private void addDocumentRow(LinearLayout parent, String name, String subtitle, String glyph, Runnable click) {
         LinearLayout row = horizontal();
-        row.setPadding(dp(12), dp(6), dp(12), dp(6));
-        row.setBackground(backgroundShape(colorSurface(), 15, colorBorder()));
+        row.setPadding(dp(14), dp(8), dp(14), dp(8));
+        row.setBackground(backgroundShape(colorSurface(), 12, colorBorder()));
+
         LinearLayout words = vertical();
         TextView title = text(name, 14, true, colorText());
         title.setSingleLine(true);
         title.setEllipsize(android.text.TextUtils.TruncateAt.END);
         TextView caption = text(subtitle, 12, false, colorMuted());
-        words.addView(title, lp(-1, 24));
-        words.addView(caption, lp(-1, 20));
+        words.addView(title, lp(-1, 22));
+        words.addView(caption, lp(-1, 18));
         row.addView(words, new LinearLayout.LayoutParams(0, -2, 1));
-        TextView arrow = text(glyph, 22, true, colorAccent());
+
+        TextView arrow = text(glyph, 18, true, colorAccent());
         arrow.setGravity(Gravity.CENTER);
-        row.addView(arrow, lp(34, 42));
+        row.addView(arrow, lp(32, 38));
         row.setOnClickListener(v -> click.run());
-        LinearLayout.LayoutParams params = lp(-1, 58);
-        params.bottomMargin = dp(7);
+
+        LinearLayout.LayoutParams params = lp(-1, 56);
+        params.bottomMargin = dp(6);
         parent.addView(row, params);
     }
 
@@ -364,7 +520,6 @@ public class MainActivity extends Activity {
             int flags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             getContentResolver().takePersistableUriPermission(uri, flags & Intent.FLAG_GRANT_READ_URI_PERMISSION);
         } catch (Exception ignored) {
-            // Some document providers do not support persisted grants; opening still works now.
         }
         openPdf(uri, nameFromUri(uri), 0);
     }
@@ -399,12 +554,14 @@ public class MainActivity extends Activity {
         currentName = (name == null || name.trim().isEmpty()) ? "Document.pdf" : name;
         prefs.edit().putString(KEY_LAST_URI, uri.toString()).putString(KEY_LAST_NAME, currentName).apply();
         upsertRecent(uri.toString(), currentName);
-        root = vertical();
-        root.setBackgroundColor(colorBackground());
-        root.setPadding(dp(20), dp(20), dp(20), dp(20));
+
+        LinearLayout loadingLayout = vertical();
+        loadingLayout.setBackgroundColor(colorBackground());
+        loadingLayout.setGravity(Gravity.CENTER);
         TextView loading = text("Opening PDF…", 18, true, colorText());
         loading.setGravity(Gravity.CENTER);
-        root.addView(loading, new LinearLayout.LayoutParams(-1, -1));
+        loadingLayout.addView(loading, lp(-2, -2));
+        root = loadingLayout;
         setContentView(root);
         applySystemBars();
 
@@ -457,7 +614,6 @@ public class MainActivity extends Activity {
             while ((count = input.read(buffer)) != -1) output.write(buffer, 0, count);
             output.flush();
         } catch (Exception e) {
-            // Do not leave a partial file that might be mistaken for a complete PDF.
             //noinspection ResultOfMethodCallIgnored
             temp.delete();
             if (e instanceof IOException) throw (IOException) e;
@@ -469,7 +625,6 @@ public class MainActivity extends Activity {
             throw new IOException("The selected file is empty.");
         }
         if (target.exists() && !target.delete()) {
-            // Replacement is optional; rename below will fail clearly if blocked.
         }
         if (!temp.renameTo(target)) {
             //noinspection ResultOfMethodCallIgnored
@@ -493,78 +648,279 @@ public class MainActivity extends Activity {
 
     private void buildReader() {
         reading = true;
-        root = vertical();
-        root.setBackgroundColor(colorBackground());
+        boolean compact = isCompact();
 
-        LinearLayout top = horizontal();
-        top.setPadding(dp(12), 0, dp(12), 0);
-        TextView back = text("‹", 32, false, colorText());
+        LinearLayout readerRoot = vertical();
+        readerRoot.setBackgroundColor(colorBackground());
+
+        // Top Navigation Toolbar
+        LinearLayout topBar = horizontal();
+        topBar.setPadding(dp(8), 0, dp(12), 0);
+        topBar.setBackgroundColor(colorSurface());
+
+        TextView back = text("‹", 30, false, colorText());
         back.setGravity(Gravity.CENTER);
-        top.addView(back, lp(42, 54));
         back.setOnClickListener(v -> goHome());
-        TextView title = text(currentName, 15, true, colorText());
+        topBar.addView(back, lp(40, 52));
+
+        if (!compact) {
+            ImageView miniLogo = makeLogoView(24);
+            topBar.addView(miniLogo, lp(28, 28));
+        }
+
+        TextView title = text(currentName, compact ? 15 : 16, true, colorText());
         title.setSingleLine(true);
         title.setEllipsize(android.text.TextUtils.TruncateAt.MIDDLE);
-        top.addView(title, new LinearLayout.LayoutParams(0, dp(54), 1));
-        bookmarkButton = text(isBookmarked(currentUri, currentPage) ? "★" : "☆", 25, true, colorAccent());
+        title.setPadding(dp(8), 0, dp(8), 0);
+        topBar.addView(title, new LinearLayout.LayoutParams(0, dp(52), 1));
+
+        // Thumbnail sidebar toggle (tablets)
+        if (!compact) {
+            TextView thumbToggle = text("▤", 20, true, showThumbnailsPanel ? colorAccent() : colorMuted());
+            thumbToggle.setGravity(Gravity.CENTER);
+            thumbToggle.setOnClickListener(v -> toggleThumbnails());
+            topBar.addView(thumbToggle, lp(40, 52));
+        }
+
+        // Zoom controls
+        TextView zoomOut = text("－", 18, true, colorText());
+        zoomOut.setGravity(Gravity.CENTER);
+        zoomOut.setOnClickListener(v -> changeZoom(-0.25f));
+        topBar.addView(zoomOut, lp(36, 52));
+
+        zoomIndicator = text(Math.round(zoomScale * 100) + "%", 12, true, colorMuted());
+        zoomIndicator.setGravity(Gravity.CENTER);
+        zoomIndicator.setOnClickListener(v -> resetZoom());
+        topBar.addView(zoomIndicator, lp(compact ? 42 : 50, 52));
+
+        TextView zoomIn = text("＋", 18, true, colorText());
+        zoomIn.setGravity(Gravity.CENTER);
+        zoomIn.setOnClickListener(v -> changeZoom(0.25f));
+        topBar.addView(zoomIn, lp(36, 52));
+
+        // Bookmark button
+        bookmarkButton = text(isBookmarked(currentUri, currentPage) ? "★" : "☆", 24, true, colorAccent());
         bookmarkButton.setGravity(Gravity.CENTER);
-        top.addView(bookmarkButton, lp(46, 54));
         bookmarkButton.setOnClickListener(v -> toggleBookmark());
+        topBar.addView(bookmarkButton, lp(42, 52));
+
+        // Theme toggle
         TextView theme = text(darkMode ? "☀" : "☾", 20, true, colorText());
         theme.setGravity(Gravity.CENTER);
-        top.addView(theme, lp(38, 54));
         theme.setOnClickListener(v -> toggleTheme());
-        root.addView(top, lp(-1, 54));
+        topBar.addView(theme, lp(38, 52));
 
+        readerRoot.addView(topBar, lp(-1, 52));
+
+        // Search Bar
         LinearLayout searchRow = horizontal();
-        searchRow.setPadding(dp(10), dp(7), dp(10), dp(7));
+        searchRow.setPadding(dp(12), dp(6), dp(12), dp(6));
+        searchRow.setBackgroundColor(colorSurfaceSubtle());
+
         searchInput = new EditText(this);
         searchInput.setSingleLine(true);
         searchInput.setTextSize(14);
-        searchInput.setHint("Search text in this PDF");
+        searchInput.setHint("Search text in PDF…");
         searchInput.setHintTextColor(colorMuted());
         searchInput.setTextColor(colorText());
         searchInput.setPadding(dp(12), 0, dp(12), 0);
-        searchInput.setBackground(backgroundShape(colorSurface(), 12, colorBorder()));
-        searchRow.addView(searchInput, new LinearLayout.LayoutParams(0, dp(42), 1));
+        searchInput.setBackground(backgroundShape(colorSurface(), 10, colorBorder()));
+        searchRow.addView(searchInput, new LinearLayout.LayoutParams(0, dp(38), 1));
+
         Button find = makeButton("Find", true, this::searchPdf);
-        LinearLayout.LayoutParams findParams = lp(66, 42);
-        findParams.leftMargin = dp(7);
+        LinearLayout.LayoutParams findParams = lp(compact ? 60 : 76, 38);
+        findParams.leftMargin = dp(6);
         searchRow.addView(find, findParams);
+
         nextSearchButton = makeButton("Next", false, this::nextSearchResult);
-        LinearLayout.LayoutParams nextParams = lp(65, 42);
+        LinearLayout.LayoutParams nextParams = lp(compact ? 60 : 76, 38);
         nextParams.leftMargin = dp(6);
         searchRow.addView(nextSearchButton, nextParams);
-        root.addView(searchRow, lp(-1, 56));
 
+        readerRoot.addView(searchRow, lp(-1, 50));
+
+        // Main Reading Area:
+        LinearLayout centerSplit = horizontal();
+        centerSplit.setBackgroundColor(darkMode ? Color.parseColor("#181B20") : Color.parseColor("#E5E9F0"));
+
+        if (!compact && showThumbnailsPanel) {
+            thumbnailScroll = new ScrollView(this);
+            thumbnailScroll.setFillViewport(true);
+            thumbnailScroll.setBackgroundColor(colorSurface());
+
+            thumbnailContainer = vertical();
+            thumbnailContainer.setPadding(dp(8), dp(8), dp(8), dp(8));
+            thumbnailContainer.setGravity(Gravity.CENTER_HORIZONTAL);
+            thumbnailScroll.addView(thumbnailContainer, new ScrollView.LayoutParams(-1, -2));
+
+            centerSplit.addView(thumbnailScroll, lp(compact ? 120 : 170, -1));
+
+            populateThumbnails();
+        }
+
+        // Center PDF Canvas
         ScrollView pageScroll = new ScrollView(this);
         pageScroll.setFillViewport(true);
-        pageScroll.setBackgroundColor(darkMode ? Color.parseColor("#222731") : Color.parseColor("#E9EDF5"));
+        pageScroll.setBackgroundColor(darkMode ? Color.parseColor("#14171C") : Color.parseColor("#E9EDF4"));
+
         LinearLayout pageHolder = vertical();
         pageHolder.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
         pageHolder.setPadding(dp(8), dp(12), dp(8), dp(12));
+
         pageImage = new ImageView(this);
         pageImage.setAdjustViewBounds(true);
         pageImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
         pageImage.setBackgroundColor(Color.WHITE);
         pageHolder.addView(pageImage, new LinearLayout.LayoutParams(-1, -2));
+
         pageScroll.addView(pageHolder, new ScrollView.LayoutParams(-1, -2));
-        root.addView(pageScroll, new LinearLayout.LayoutParams(-1, 0, 1));
+        centerSplit.addView(pageScroll, new LinearLayout.LayoutParams(0, -1, 1));
 
+        readerRoot.addView(centerSplit, new LinearLayout.LayoutParams(-1, 0, 1));
+
+        // Bottom Navigation Bar
         LinearLayout nav = horizontal();
-        nav.setPadding(dp(14), dp(8), dp(14), dp(8));
-        Button previous = makeButton("←  Previous", false, () -> setPage(currentPage - 1));
-        nav.addView(previous, new LinearLayout.LayoutParams(0, dp(44), 1));
-        pageCounter = text(pageLabel(), 13, true, colorText());
-        pageCounter.setGravity(Gravity.CENTER);
-        nav.addView(pageCounter, new LinearLayout.LayoutParams(0, dp(44), 1));
-        Button next = makeButton("Next  →", true, () -> setPage(currentPage + 1));
-        nav.addView(next, new LinearLayout.LayoutParams(0, dp(44), 1));
-        root.addView(nav, lp(-1, 60));
+        nav.setPadding(dp(16), dp(6), dp(16), dp(6));
+        nav.setBackgroundColor(colorSurface());
 
+        prevButton = makeButton("←  Prev", false, () -> setPage(currentPage - 1));
+        nav.addView(prevButton, new LinearLayout.LayoutParams(0, dp(42), 1));
+
+        pageCounter = text(pageLabel(), 14, true, colorText());
+        pageCounter.setGravity(Gravity.CENTER);
+        pageCounter.setOnClickListener(v -> showPageJumpDialog());
+        nav.addView(pageCounter, new LinearLayout.LayoutParams(0, dp(42), 1));
+
+        nextButton = makeButton("Next  →", true, () -> setPage(currentPage + 1));
+        nav.addView(nextButton, new LinearLayout.LayoutParams(0, dp(42), 1));
+
+        readerRoot.addView(nav, lp(-1, 54));
+
+        root = readerRoot;
         setContentView(root);
         applySystemBars();
         updateReaderControls();
+    }
+
+    private void toggleThumbnails() {
+        showThumbnailsPanel = !showThumbnailsPanel;
+        buildReader();
+        renderPage(currentPage);
+    }
+
+    private void changeZoom(float delta) {
+        zoomScale = Math.max(0.5f, Math.min(3.0f, zoomScale + delta));
+        renderPage(currentPage);
+    }
+
+    private void resetZoom() {
+        zoomScale = 1.0f;
+        renderPage(currentPage);
+    }
+
+    private void showPageJumpDialog() {
+        if (pageCount <= 1) return;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Go to page (1 – " + pageCount + ")");
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setText(String.valueOf(currentPage + 1));
+        input.setSelection(input.getText().length());
+        builder.setView(input);
+
+        builder.setPositiveButton("Go", (dialog, which) -> {
+            try {
+                int target = Integer.parseInt(input.getText().toString().trim()) - 1;
+                if (target >= 0 && target < pageCount) {
+                    setPage(target);
+                } else {
+                    showToast("Page number must be between 1 and " + pageCount);
+                }
+            } catch (Exception ignored) { }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
+    /**
+     * Renders page thumbnails sequentially on an independent background thread
+     * using its own dedicated PdfRenderer and ParcelFileDescriptor instances,
+     * avoiding any IllegalStateException from concurrent page rendering.
+     */
+    private void populateThumbnails() {
+        if (thumbnailContainer == null || currentFile == null || pageCount <= 0) return;
+        thumbnailContainer.removeAllViews();
+        final int reqId = ++thumbRequestId;
+
+        int thumbWidthDp = isCompact() ? 100 : 140;
+        int maxThumbs = Math.min(pageCount, 60);
+
+        final ImageView[] thumbViews = new ImageView[maxThumbs];
+
+        for (int i = 0; i < maxThumbs; i++) {
+            final int pageIdx = i;
+            LinearLayout thumbItem = vertical();
+            thumbItem.setPadding(dp(4), dp(4), dp(4), dp(4));
+            thumbItem.setGravity(Gravity.CENTER_HORIZONTAL);
+            thumbItem.setBackground(backgroundShape(colorSurface(), 8,
+                    (pageIdx == currentPage) ? colorAccent() : colorBorder()));
+
+            TextView label = text("Page " + (pageIdx + 1), 11, pageIdx == currentPage,
+                    (pageIdx == currentPage) ? colorAccent() : colorMuted());
+            label.setGravity(Gravity.CENTER);
+            thumbItem.addView(label, lp(-1, 18));
+
+            ImageView thumbImg = new ImageView(this);
+            thumbImg.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            thumbImg.setAdjustViewBounds(true);
+            thumbImg.setBackgroundColor(Color.WHITE);
+            thumbItem.addView(thumbImg, lp(thumbWidthDp, -2));
+
+            thumbItem.setOnClickListener(v -> setPage(pageIdx));
+
+            LinearLayout.LayoutParams itemLp = lp(-1, -2);
+            itemLp.bottomMargin = dp(8);
+            thumbnailContainer.addView(thumbItem, itemLp);
+
+            thumbViews[i] = thumbImg;
+        }
+
+        final File pdfFile = currentFile;
+        ioExecutor.execute(() -> {
+            ParcelFileDescriptor pfd = null;
+            PdfRenderer r = null;
+            try {
+                pfd = ParcelFileDescriptor.open(pdfFile, ParcelFileDescriptor.MODE_READ_ONLY);
+                r = new PdfRenderer(pfd);
+                for (int i = 0; i < maxThumbs; i++) {
+                    if (reqId != thumbRequestId || isFinishing() || isDestroyed()) break;
+                    Bitmap bm = null;
+                    try (PdfRenderer.Page page = r.openPage(i)) {
+                        int w = dp(thumbWidthDp);
+                        float ratio = (float) page.getHeight() / Math.max(1, page.getWidth());
+                        int h = Math.max(1, Math.round(w * ratio));
+                        bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+                        bm.eraseColor(Color.WHITE);
+                        page.render(bm, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+                    } catch (Exception ignored) { }
+
+                    final int pageIdx = i;
+                    final Bitmap finalBm = bm;
+                    if (finalBm != null) {
+                        runOnUiThread(() -> {
+                            if (reqId == thumbRequestId && thumbViews[pageIdx] != null) {
+                                thumbViews[pageIdx].setImageBitmap(finalBm);
+                            }
+                        });
+                    }
+                }
+            } catch (Exception ignored) {
+            } finally {
+                if (r != null) { try { r.close(); } catch (Exception ignored) {} }
+                if (pfd != null) { try { pfd.close(); } catch (Exception ignored) {} }
+            }
+        });
     }
 
     private String pageLabel() {
@@ -574,7 +930,40 @@ public class MainActivity extends Activity {
     private void updateReaderControls() {
         if (pageCounter != null) pageCounter.setText(pageLabel());
         if (bookmarkButton != null) bookmarkButton.setText(isBookmarked(currentUri, currentPage) ? "★" : "☆");
-        if (nextSearchButton != null) nextSearchButton.setEnabled(!searchPages.isEmpty());
+        if (zoomIndicator != null) zoomIndicator.setText(Math.round(zoomScale * 100) + "%");
+        if (nextSearchButton != null) {
+            boolean hasMatches = !searchPages.isEmpty();
+            nextSearchButton.setEnabled(hasMatches);
+            nextSearchButton.setAlpha(hasMatches ? 1.0f : 0.4f);
+        }
+        if (prevButton != null) {
+            boolean canPrev = currentPage > 0;
+            prevButton.setEnabled(canPrev);
+            prevButton.setAlpha(canPrev ? 1.0f : 0.4f);
+        }
+        if (nextButton != null) {
+            boolean canNext = currentPage < pageCount - 1;
+            nextButton.setEnabled(canNext);
+            nextButton.setAlpha(canNext ? 1.0f : 0.4f);
+        }
+    }
+
+    private void updateThumbnailHighlight() {
+        if (thumbnailContainer == null) return;
+        int childCount = thumbnailContainer.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View child = thumbnailContainer.getChildAt(i);
+            if (child instanceof LinearLayout) {
+                LinearLayout item = (LinearLayout) child;
+                boolean selected = (i == currentPage);
+                item.setBackground(backgroundShape(colorSurface(), 8, selected ? colorAccent() : colorBorder()));
+                if (item.getChildCount() > 0 && item.getChildAt(0) instanceof TextView) {
+                    TextView lbl = (TextView) item.getChildAt(0);
+                    lbl.setTextColor(selected ? colorAccent() : colorMuted());
+                    lbl.setTypeface(Typeface.DEFAULT, selected ? Typeface.BOLD : Typeface.NORMAL);
+                }
+            }
+        }
     }
 
     private void renderPage(int pageIndex) {
@@ -582,11 +971,17 @@ public class MainActivity extends Activity {
         currentPage = pageIndex;
         Bitmap nextBitmap = null;
         try (PdfRenderer.Page page = renderer.openPage(pageIndex)) {
-            int maxWidth = Math.max(dp(300), getResources().getDisplayMetrics().widthPixels - dp(56));
+            int displayWidth = getResources().getDisplayMetrics().widthPixels;
+            int availableWidth = isCompact() ? displayWidth - dp(32) : (showThumbnailsPanel ? displayWidth - dp(240) : displayWidth - dp(80));
+            int baseWidth = Math.max(dp(300), availableWidth);
             float ratio = (float) page.getHeight() / Math.max(1, page.getWidth());
-            int width = Math.min(maxWidth, 1800);
-            int height = Math.max(1, Math.round(width * ratio));
-            nextBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+            int targetWidth = Math.round(baseWidth * zoomScale);
+            // Cap at 3600px to avoid memory overflow while preserving razor sharpness
+            targetWidth = Math.min(3600, Math.max(dp(280), targetWidth));
+            int targetHeight = Math.max(1, Math.round(targetWidth * ratio));
+
+            nextBitmap = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888);
             nextBitmap.eraseColor(Color.WHITE);
             page.render(nextBitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
             if (displayedBitmap != null && !displayedBitmap.isRecycled()) displayedBitmap.recycle();
@@ -598,6 +993,7 @@ public class MainActivity extends Activity {
         }
         prefs.edit().putInt(pageKey(currentUri), currentPage).apply();
         updateReaderControls();
+        updateThumbnailHighlight();
     }
 
     private void setPage(int newPage) {
@@ -618,7 +1014,7 @@ public class MainActivity extends Activity {
         }
         hideKeyboard();
         if (nextSearchButton != null) nextSearchButton.setEnabled(false);
-        showToast("Searching the document…");
+        showToast("Searching document…");
         File file = currentFile;
         ioExecutor.execute(() -> {
             ArrayList<Integer> matches = new ArrayList<>();
@@ -741,6 +1137,7 @@ public class MainActivity extends Activity {
     }
 
     private void closeRenderer() {
+        thumbRequestId++;
         if (displayedBitmap != null && !displayedBitmap.isRecycled()) displayedBitmap.recycle();
         displayedBitmap = null;
         if (renderer != null) {
@@ -754,12 +1151,71 @@ public class MainActivity extends Activity {
         pageImage = null;
         pageCounter = null;
         bookmarkButton = null;
+        zoomIndicator = null;
+        prevButton = null;
+        nextButton = null;
         searchInput = null;
         nextSearchButton = null;
+        thumbnailContainer = null;
+        thumbnailScroll = null;
     }
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // When typing in search input, let all text events pass to the input field
+        if (searchInput != null && searchInput.hasFocus()) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                searchPdf();
+                return true;
+            }
+            if (keyCode == KeyEvent.KEYCODE_ESCAPE) {
+                hideKeyboard();
+                return true;
+            }
+            return super.onKeyDown(keyCode, event);
+        }
+
+        if (reading) {
+            if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_PAGE_UP) {
+                setPage(currentPage - 1);
+                return true;
+            }
+            if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_PAGE_DOWN || keyCode == KeyEvent.KEYCODE_SPACE) {
+                setPage(currentPage + 1);
+                return true;
+            }
+            if (event.isCtrlPressed()) {
+                if (keyCode == KeyEvent.KEYCODE_F) {
+                    if (searchInput != null) {
+                        searchInput.requestFocus();
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        if (imm != null) imm.showSoftInput(searchInput, InputMethodManager.SHOW_IMPLICIT);
+                    }
+                    return true;
+                }
+                if (keyCode == KeyEvent.KEYCODE_PLUS || keyCode == KeyEvent.KEYCODE_EQUALS) {
+                    changeZoom(0.25f);
+                    return true;
+                }
+                if (keyCode == KeyEvent.KEYCODE_MINUS) {
+                    changeZoom(-0.25f);
+                    return true;
+                }
+                if (keyCode == KeyEvent.KEYCODE_B) {
+                    toggleBookmark();
+                    return true;
+                }
+            }
+            if (keyCode == KeyEvent.KEYCODE_ESCAPE) {
+                hideKeyboard();
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

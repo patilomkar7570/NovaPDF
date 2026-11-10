@@ -1,77 +1,135 @@
-# StillPDF — private, ad-free PDF reader
+# NOVA PDF — Private, Offline PDF Reader for Android
 
-StillPDF is a lightweight Android PDF reader designed around privacy and offline use. It has no advertisements, analytics, account system, internet permission, or tracking SDK.
+<p align="center">
+  <img src="assets/branding/nova-logo-black.png" alt="NOVA PDF Logo" width="128" height="128" />
+</p>
 
-**By NOVA** · An independent app in the NOVA ecosystem.
+<p align="center">
+  <strong>A modern, distraction-free, privacy-first PDF reader for Android phones, foldables, and tablets.</strong><br>
+  No advertisements. No analytics. No account requirements. 100% offline and local.
+</p>
 
-## Features
+---
 
-- Open PDF files using Android's system document picker.
-- Render PDF pages offline using Android `PdfRenderer`.
-- Search for words and phrases in selectable PDF text using PDFBox-Android.
-- Save and remove page bookmarks.
-- Remember the last page for each document.
-- View recently opened documents and saved bookmarks.
-- Switch between light and dark themes.
-- Open or share PDF files from other apps.
+## Overview
 
-## Privacy
+**NOVA PDF** is an independent, native Android document reader engineered for speed, privacy, and readability across all form factors.
 
-- No ads, accounts, analytics, or tracking.
-- No Internet permission is requested.
-- Documents are processed locally on your device.
-- App preferences and cached document copies are stored in private app storage.
-- Uninstalling the app removes its private local data and cache.
+Whether reading on a compact smartphone, a foldable device, or a large Android tablet, NOVA PDF adapts smoothly to your screen size with responsive multi-column layouts, page thumbnails, in-document text search, bookmarks, and last-read page restoration.
 
-## Known limitations
+All processing occurs entirely on your device. The application does not request internet permission and never transmits your documents.
 
-- Search works only with text embedded in the PDF. Scanned or image-only PDFs require OCR; OCR is not included.
-- Password-protected, damaged, or unusual PDFs may fail to open.
+---
 
-## Download
+## Key Features
 
-The latest public release is **StillPDF v1.0.0**.
+- **⚡ Fast Native Rendering:** Powered by Android's hardware-accelerated `PdfRenderer` for sharp, high-DPI rendering without bloat.
+- **📱 Phone & Tablet Adaptive Layouts:**
+  - **Compact (<600dp):** Streamlined single-column reading experience with clean controls and easy thumb navigation.
+  - **Medium (600–839dp):** Two-column document library (Recent Documents and Bookmarks side-by-side) with expanded reading controls.
+  - **Expanded (840dp+):** Collapsible thumbnail navigation sidebar, dual-column library, and spacious reading area.
+- **🔍 Full Text Search:** In-document text extraction and searching powered by PDFBox-Android with match stepping and navigation.
+- **📑 Page Thumbnails Panel:** Collapsible thumbnail rail for rapid visual scanning across pages.
+- **★ Bookmarks & Reading History:** Bookmark important pages and resume reading exactly where you left off.
+- **🌗 Light & Dark Themes:** High-contrast reading themes designed to minimize eye strain in any lighting condition.
+- **🔍 Multi-Level Zoom & Jump Dialog:** Smooth zoom controls (50% to 300%) with reset button and direct page jump dialog.
+- **⌨️ Keyboard & Hardware Support:** Full navigation support via arrow keys, Page Up/Down, Space, and shortcuts (`Ctrl + F`, `Ctrl + B`, `Ctrl + Plus`, `Ctrl + Minus`).
+- **🔒 Absolute Privacy:** Zero trackers, zero ads, zero analytics, zero cloud connections.
 
-- [Download StillPDF v1.0.0 APK](https://github.com/patilomkar7570/StillPDF/releases/download/v1.0.0/Still.PDF.apk)
-- [View all releases](https://github.com/patilomkar7570/StillPDF/releases)
+---
 
-Download the APK to your Android device and install it. Android may ask you to allow installation from the browser or file manager you used. Only install APKs from sources you trust.
+## Technical Specifications
 
-**Minimum Android version:** Android 6.0 (API 23).
+| Parameter | Value |
+| :--- | :--- |
+| **Application ID** | `app.stillpdf.reader` *(Preserved for 100% upgrade compatibility with previous installs)* |
+| **Version Name** | `1.1.0` |
+| **Version Code** | `2` |
+| **Minimum SDK** | Android 6.0 Marshmallow (API 23) |
+| **Target SDK** | Android 14 (API 34) |
+| **Compile SDK** | Android 15 (API 35) |
+| **Language** | Native Java 17 |
+| **Rendering Engine** | Android `PdfRenderer` |
+| **Search Engine** | PDFBox-Android 2.0.27.0 |
+| **Distribution** | Signed Release APK (`NOVA-PDF-Android-v1.1.0.apk`) |
 
-## Build an APK in Android Studio
+---
 
-1. Install Android Studio and a compatible Android SDK.
-2. Open the `StillPDF` project folder in Android Studio.
-3. Allow Gradle sync to finish. If prompted, install Android SDK Platform 35 and Java 17.
-4. Choose **Build → Build Bundle(s) / APK(s) → Build APK(s)**.
-5. Android Studio will provide the debug APK. The expected output path is:
+## Installation
 
-   `app/build/outputs/apk/debug/app-debug.apk`
+### Download Signed Release APK
 
-The debug APK is intended for development and testing. It is not the signed public release APK.
+You can download the official signed release APK directly from the [GitHub Releases](https://github.com/patilomkar7570/StillPDF/releases) page or workflow artifacts:
 
-## Build using GitHub Actions
+- **Artifact Name:** `NOVA-PDF-Android-v1.1.0.apk`
 
-The workflow at `.github/workflows/build-apk.yml` builds a **signed release APK** when code is pushed to the `main` or `master` branch, or when the workflow is started manually from the repository's **Actions** tab.
+### Installation Steps
 
-After a successful run:
+1. Transfer or download `NOVA-PDF-Android-v1.1.0.apk` to your Android device.
+2. Open your device's file manager or browser downloads and tap the APK.
+3. If prompted, allow "Install unknown apps" from your file manager or browser.
+4. Tap **Install** (or **Update**).
+5. All your existing recent documents, bookmarks, and preferences from previous versions are automatically preserved!
 
-1. Open the completed **Build StillPDF APK** workflow run.
-2. Find the `StillPDF-signed-release-apk` artifact.
-3. Download the artifact ZIP and extract `app-release.apk`.
+---
 
-The workflow uses GitHub Actions repository secrets for the Android release-signing keystore and passwords. These signing credentials must be configured by the repository maintainer. Workflow artifacts are retained for 30 days.
+## Building from Source
 
-## Technical details
+### Prerequisites
 
-- Package: `app.stillpdf.reader`
-- Current version: `1.0.0`
-- Minimum Android version: Android 6.0 (API 23)
-- Compile SDK: 35
-- Target SDK: 34
-- Java: 17
-- PDF rendering: Android `PdfRenderer`
-- Text extraction and search: PDFBox-Android `2.0.27.0`
+- Java Development Kit (JDK) 17
+- Android SDK (Build Tools 35.0.0, Platform API 35)
+- Gradle 8.9
 
-StillPDF is an offline-first project. It does not request Internet access.
+### Build Debug APK
+
+```bash
+gradle assembleDebug
+```
+
+The debug APK will be generated at:
+`app/build/outputs/apk/debug/app-debug.apk`
+
+### Build Signed Release APK
+
+Provide your signing credentials as environment variables:
+
+```bash
+export ANDROID_KEYSTORE_FILE="/path/to/keystore.jks"
+export ANDROID_KEYSTORE_PASSWORD="your-keystore-password"
+export ANDROID_KEY_ALIAS="your-key-alias"
+export ANDROID_KEY_PASSWORD="your-key-password"
+
+gradle assembleRelease
+```
+
+The signed release APK will be generated at:
+`app/build/outputs/apk/release/app-release.apk`
+
+---
+
+## Continuous Integration (GitHub Actions)
+
+The repository includes an automated CI/CD release workflow located at:
+`.github/workflows/build-apk.yml`
+
+On every push or manual `workflow_dispatch`, GitHub Actions:
+1. Sets up JDK 17, Gradle 8.9, and Android SDK Build Tools 35.0.0.
+2. Decodes the signing keystore securely from repository secrets (`ANDROID_KEYSTORE_BASE64`).
+3. Compiles the release build with `gradle assembleRelease`.
+4. Validates the signature scheme with `apksigner verify --verbose` and prints certificate details with `keytool`.
+5. Uploads `NOVA-PDF-Android-v1.1.0.apk` as a workflow artifact.
+
+---
+
+## Privacy Policy
+
+NOVA PDF does not collect, transmit, store, or share any personal information, usage metrics, or document contents.
+All PDF reading and search operations are performed entirely in-memory and on-device.
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+Third-party licenses are documented in [NOTICE.md](NOTICE.md).

@@ -1,6 +1,13 @@
-StillPDF is provided as an example personal-use Android project.
+NOVA PDF
+Copyright (c) 2026 patilomkar7570
 
-Third-party dependency:
-- PDFBox-Android, version 2.0.27.0. This library is distributed under the Apache License, Version 2.0. See the dependency project's license for the full license text.
+NOVA PDF is a private, local-first document reading application for Android phone and tablet devices.
 
-StillPDF itself does not include ad, analytics, or tracking SDKs.
+Third-Party Licenses and Dependencies:
+
+1. Android Edition:
+   - PDFBox-Android, version 2.0.27.0
+     Licensed under the Apache License, Version 2.0
+     https://www.apache.org/licenses/LICENSE-2.0
+
+NOVA PDF does not include advertisements, user accounts, analytics, or telemetry tracking SDKs. All document processing and rendering occur strictly on the user's local device.
