@@ -42,7 +42,7 @@ All processing occurs entirely on your device. The application does not request 
 
 | Parameter | Value |
 | :--- | :--- |
-| **Application ID** | `app.stillpdf.reader` *(100% upgrade compatible with StillPDF v1.0.0)* |
+| **Application ID** | `app.stillpdf.reader` *(Preserved for 100% upgrade compatibility with previous installs)* |
 | **Version Name** | `1.1.0` |
 | **Version Code** | `2` |
 | **Minimum SDK** | Android 6.0 Marshmallow (API 23) |

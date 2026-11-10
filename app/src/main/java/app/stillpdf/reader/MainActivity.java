@@ -377,6 +377,7 @@ public class MainActivity extends Activity {
 
             TextView footer = text("NOVA PDF  •  Offline & Private Document Reader", 12, false, colorMuted());
             footer.setGravity(Gravity.CENTER);
+            footer.setOnClickListener(v -> showAboutDialog());
             LinearLayout.LayoutParams footerParams = lp(-1, 44);
             footerParams.topMargin = dp(16);
             lists.addView(footer, footerParams);
@@ -403,6 +404,7 @@ public class MainActivity extends Activity {
 
             TextView footer = text("NOVA PDF  •  Offline & Private Document Reader", 12, false, colorMuted());
             footer.setGravity(Gravity.CENTER);
+            footer.setOnClickListener(v -> showAboutDialog());
             LinearLayout.LayoutParams footerParams = lp(-1, 44);
             footerParams.topMargin = dp(24);
             wideContainer.addView(footer, footerParams);
@@ -417,6 +419,20 @@ public class MainActivity extends Activity {
         root = homeRoot;
         setContentView(root);
         applySystemBars();
+    }
+
+    private void showAboutDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("NOVA PDF")
+                .setMessage("Version 1.1.0\n\n"
+                        + "Licensed under the MIT License\n"
+                        + "Copyright \u00A9 2026 patilomkar7570\n\n"
+                        + "A private, distraction-free document reader for Android.\n"
+                        + "100% offline. No advertisements, tracking, or cloud uploads.\n\n"
+                        + "Third-party software:\n"
+                        + "\u2022 PDFBox-Android 2.0.27.0 (Apache License 2.0)")
+                .setPositiveButton("OK", null)
+                .show();
     }
 
     private void buildSection(LinearLayout container, String title, ArrayList<JSONObject> items, boolean isRecent) {
